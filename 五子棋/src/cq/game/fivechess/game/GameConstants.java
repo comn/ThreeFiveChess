@@ -21,4 +21,9 @@ public class GameConstants {
 	public static final int BLUETOOTH_ADD_CHESS = 4;
 	public static final int EAT_CHESS = 19;
 	
+	
+	public static final int COMPUTER_DOWN_CHESS = 0;
+	public static final int COMPUTER_EAT_CHESS = 1;
+	
+	
 }

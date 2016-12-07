@@ -182,6 +182,19 @@ public class To3Game {
 	}
     
     /**
+     * 吃掉
+     */
+    public boolean eatChess(Coordinate o) {
+    	if (clearChess(o)) {
+    		//添加进已吃的子的集合
+    		eatedActions.add(o);
+    		return true;
+		}
+    	
+		return false;
+    }
+    
+    /**
      * 游戏宽度
      * @return 棋盘的列数
      */
@@ -272,7 +285,6 @@ public class To3Game {
         }
         return false;
     }
-
 
 	/**
      * 落子

@@ -49,7 +49,12 @@ public class ComputerGameActivity extends BaseActivity {
 					Toast.makeText(ComputerGameActivity.this, "黑方成三吃子", 1).show();
 					mGameView.eatChess(Game.WHITE);
 				} 
+				//电脑成三吃子
+				 else if (msg.arg1 == Game.WHITE) {
+						mComputerHandler.sendEmptyMessage(GameConstants.COMPUTER_EAT_CHESS);
+				}
 				break;
+				
 			case GameConstants.CHANGE_ACTIVE:// 换手
 				updateActive(mGame);
 				computerHandler();
@@ -68,7 +73,7 @@ public class ComputerGameActivity extends BaseActivity {
 		// 此时玩家已下子，促使电脑下子
 		private void computerHandler() {
 			if (mGame.getActive() == white.getType()) {
-				mComputerHandler.sendEmptyMessage(0);
+				mComputerHandler.sendEmptyMessage(GameConstants.COMPUTER_DOWN_CHESS);
 			}
 		}
 	};
@@ -97,18 +102,35 @@ public class ComputerGameActivity extends BaseActivity {
 		
 		@Override
 		public void handleMessage(Message msg) {
-			ai.updateValue(mGame);
 			Coordinate c = null;
-			// 判断是否为第一子。
-			if (mGame.isFirstChess()) {
-				c = new Coordinate(7, 3);// 3,7;7,11;11,7
-//				此处为成三棋中电脑第一子的落点
-			} else {
-//				ComputerAI算法存在问题
-				c = ai.getPosition(mGame.getChessMap());
+			switch (msg.what) {
+			case GameConstants.COMPUTER_DOWN_CHESS:
+				ai.updateValue(mGame);
+				// 判断是否为第一子。
+				if (mGame.isFirstChess()) {
+					c = new Coordinate(7, 3);// 3,7;7,11;11,7
+//					此处为成三棋中电脑第一子的落点
+				} else {
+//					ComputerAI算法存在问题
+					c = ai.getPosition(mGame.getChessMap());
+				}
+				mGame.addChess(c, white);
+				mGameView.drawGame();
+				break;
+			case GameConstants.COMPUTER_EAT_CHESS:
+//				 c=ai.eatChess(map);这里面通过电脑思考后拿到点位
+				c= new Coordinate(3, 7,Game.BLACK);
+				boolean isComputerEat = mGame.eatChess(c);
+				if (isComputerEat) {
+					mGameView.drawGame();
+					mGame.sendChangeActive();
+				}
+				break;
+			default:
+				break;
 			}
-			mGame.addChess(c, white);
-			mGameView.drawGame();
+			
+			
 			// 控制电脑手时的玩家悔棋。
 			if (isRollback) {
 				rollback();
