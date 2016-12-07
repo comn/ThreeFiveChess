@@ -6,6 +6,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 import cq.game.fivechess.game.ComputerAI;
 import cq.game.fivechess.game.Coordinate;
 import cq.game.fivechess.game.Game;
@@ -38,16 +39,20 @@ public class ComputerGameActivity extends BaseActivity {
 				Coordinate c =(Coordinate) msg.obj;
 				if (c.type == Game.BLACK) {
 					black.downChess();
-					// 此时玩家已下子，促使电脑下子
-					if (mGame.getActive() == white.getType()) {
-						mComputerHandler.sendEmptyMessage(0);
-					}
+					computerHandler();
 				}
 				updateGameInfo();
 				break;
 				
 			case GameConstants.THREE_CHESS:
-				
+				if (msg.arg1 == Game.BLACK) {  
+					Toast.makeText(ComputerGameActivity.this, "黑方成三吃子", 1).show();
+					mGameView.eatChess(Game.WHITE);
+				} 
+				break;
+			case GameConstants.CHANGE_ACTIVE:// 换手
+				updateActive(mGame);
+				computerHandler();
 				break;
 				
 			case GameConstants.CHALLENGER_ADD:
@@ -57,6 +62,13 @@ public class ComputerGameActivity extends BaseActivity {
 				break;
 			default:
 				break;
+			}
+		}
+
+		// 此时玩家已下子，促使电脑下子
+		private void computerHandler() {
+			if (mGame.getActive() == white.getType()) {
+				mComputerHandler.sendEmptyMessage(0);
 			}
 		}
 	};

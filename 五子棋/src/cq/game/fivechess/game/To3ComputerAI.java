@@ -990,7 +990,7 @@ public class To3ComputerAI {
 	 * 
 	 * @param map
 	 * @return point
-	 * @description 落子点坐标
+	 * @description 落子点坐标   问题分析： 我做的电脑AI目前太蠢了，还有很多改进的空间
 	 */
 	public Coordinate getPosition(int[][] map) {
 		    int maxpSum = 0;
