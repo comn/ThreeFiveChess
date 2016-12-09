@@ -284,19 +284,12 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
             int type = mGame.getChessMap()[focus.x][focus.y];
             //动子阶段
             if (mGame.me.getmChesses()==0 && mGame.challenger.getmChesses()==0) {
-            	if (type!=0) {
-            		start.x =focus.x;
-            		start.y=focus.y;
-            		start.type =type;
-            	}else {
-            		end.x=focus.x;
-            		end.y=focus.y;
-            		end.type =type;
-            		//判断结束点是否在开始点的旁边一个位置 是：可移动 否：不可移动
-            		if(isNearBy(start,end) || exChangePoint(start,end)){
-            			chessMove(start, end);
-            		}
-            	}
+            	if(mGame.getMode() ==GameConstants.MODE_FIGHT){
+            		handleChessMove(type);
+            	}else if (mGame.getMode() ==GameConstants.MODE_SINGLE) {
+					if (start.type != mGame.challenger.type) 
+						handleChessMove(type);
+				}
 			}
            
             if (eatChessCallBack !=null) {
@@ -327,6 +320,26 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
         }
         return true;
     }
+    
+    /**
+     * 处理棋子移动
+     * @param type
+     */
+	private void handleChessMove(int type) {
+		if (type!=0) {
+			start.x =focus.x;
+			start.y=focus.y;
+			start.type =type;
+		}else {
+			end.x=focus.x;
+			end.y=focus.y;
+			end.type =type;
+			//判断结束点是否在开始点的旁边一个位置 是：可移动 否：不可移动
+			if(isNearBy(start,end) || exChangePoint(start,end)){
+				chessMove(start, end);
+			}
+		}
+	}
 
     private boolean isNearBy(Coordinate start, Coordinate end) {
     	//外层八个点

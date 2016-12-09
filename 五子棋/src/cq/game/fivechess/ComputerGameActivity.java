@@ -70,9 +70,16 @@ public class ComputerGameActivity extends BaseActivity {
 			}
 		}
 
-		// 此时玩家已下子，促使电脑下子
+		// 此时玩家已下子，促使电脑反应处理
 		private void computerHandler() {
 			if (mGame.getActive() == white.getType()) {
+				//动子阶段来了
+				if (mGame.getActions().size()>=GameConstants.TOTAL_CHESS){
+//				1、设置白子不可被玩家移动
+//					通知电脑进行动子阶段的处理
+					mComputerHandler.sendEmptyMessage(GameConstants.COMPUTER_CHESS_MOVE);
+					return;
+				}
 				mComputerHandler.sendEmptyMessage(GameConstants.COMPUTER_DOWN_CHESS);
 			}
 		}
@@ -118,13 +125,21 @@ public class ComputerGameActivity extends BaseActivity {
 				mGameView.drawGame();
 				break;
 			case GameConstants.COMPUTER_EAT_CHESS:
-//				 c=ai.eatChess(map);这里面通过电脑思考后拿到点位
-				c= new Coordinate(3, 7,Game.BLACK);
+//				这里面通过电脑思考后拿到点位
+				 c=ai.eatChess(mGame.getChessMap());
+//				c= new Coordinate(3, 7,Game.BLACK);
 				boolean isComputerEat = mGame.eatChess(c);
 				if (isComputerEat) {
 					mGameView.drawGame();
 					mGame.sendChangeActive();
 				}
+				break;
+			case GameConstants.COMPUTER_CHESS_MOVE:
+				Coordinate start =ai.moveStart(mGame.getChessMap());
+				Coordinate end =ai.moveEnd(mGame.getChessMap());
+				Toast.makeText(ComputerGameActivity.this, "白子从("+start.x+","+start.y+")移动到 ："
+						+"("+end.x+","+end.y+")", 0).show();
+//				mGameView.chessMove(start, end);
 				break;
 			default:
 				break;

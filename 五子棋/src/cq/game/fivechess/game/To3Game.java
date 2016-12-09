@@ -185,7 +185,7 @@ public class To3Game {
      * 吃掉
      */
     public boolean eatChess(Coordinate o) {
-    	if (clearChess(o)) {
+    	if (clearChess(o) && !isGameEnd(o.x, o.y, o.type)) {
     		//添加进已吃的子的集合
     		eatedActions.add(o);
     		return true;
@@ -264,8 +264,8 @@ public class To3Game {
 				}else {
 					changeActive();
 				}
-                sendAddChess(x, y,me.type);
-                mActions.add(new Coordinate(x, y,me.type));
+            	sendAddChess(x, y,me.type);
+            	mActions.add(new Coordinate(x, y,me.type));
                 return true;
             }
         }
@@ -303,7 +303,7 @@ public class To3Game {
 				mActive = me.type;
 			}
             //添加坐标
-            mActions.add(new Coordinate(x, y));
+            mActions.add(new Coordinate(x, y,player.type));
             boolean isEnd = isGameEnd(x, y, player.type);
             if(!isEnd){
                 mNotify.sendEmptyMessage(GameConstants.CHALLENGER_ADD);
@@ -314,7 +314,7 @@ public class To3Game {
     /**
      * 落子
      * @param c 下子位置
-     * @param player 游戏选手
+     * @param player 游戏选手  这里为电脑调用
      */
     public void addChess(Coordinate c, Player player){
         addChess(c.x, c.y, player);

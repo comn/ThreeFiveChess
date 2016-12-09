@@ -10,7 +10,7 @@ import android.util.Log;
  * 
  * @author Flsolate
  * @date 2016-10-6
- * @description 成三的电脑算法    分析数据、按照人大脑中的思维来模拟过程
+ * @description 成三的电脑算法    分析数据、按照人大脑中的思维来模拟过程,所以人脑工程的研究能促进人工智能的发展
  */
 public class To3ComputerAI {
 	private static final String TAG = "To3ComputerAI";
@@ -1061,10 +1061,20 @@ public class To3ComputerAI {
 	 * 成三吃子
 	 */
 	public Coordinate eatChess(int[][] map) {
+//		判断对方有无两子连续  这里为优先级为最高，因为己方吃完就到对方手
+//		有，吃其中一子
+//		3、无，则任意吃非对方成三的子
 		//1、有己方两子凉连续     吃堵住了己方三的对方子
 //		2、无，则 吃堵住己方已经成三的子
-//		3、无，则任意吃非对方成三的子
-		
+		for (Coordinate c : gamePoints) {
+			if (map[c.x][c.y]  == To3Game.BLACK && !(game.isThree(c.x, c.y, To3Game.BLACK))) {
+				// 对方成二的情况优先吃其子
+//				if (isTwo(c)) {
+//					return new Coordinate(c.x, c.y, To3Game.BLACK);
+//				}
+				return new Coordinate(c.x, c.y, To3Game.BLACK);
+			}
+		}
 		return null;
 	}
 	
@@ -1076,14 +1086,14 @@ public class To3ComputerAI {
 		//  找到最大权值得点   
 //				找到距离该点最近的路线进行子力移动
 //		            
-		return null;
+		return new Coordinate(1, 1, To3Game.WHITE);
 	}
 	
 	/**
 	 * 动子时的结束点
 	 */
-	public void moveEnd() {
-		
+	public Coordinate moveEnd(int[][] map) {
+		return  new Coordinate(1, 7, To3Game.WHITE);
 	}
 	
 	
