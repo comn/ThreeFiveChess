@@ -135,7 +135,7 @@ public class ComputerGameActivity extends BaseActivity {
 				}
 				break;
 			case GameConstants.COMPUTER_CHESS_MOVE:
-				Coordinate start =ai.moveStart(mGame.getChessMap());
+				Coordinate start =ai.moveStart(mGame);
 				Coordinate end =ai.moveEnd(mGame.getChessMap());
 				Toast.makeText(ComputerGameActivity.this, "白子从("+start.x+","+start.y+")移动到 ："
 						+"("+end.x+","+end.y+")", 0).show();

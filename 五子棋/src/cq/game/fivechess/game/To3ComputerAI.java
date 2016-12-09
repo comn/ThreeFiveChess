@@ -1,8 +1,11 @@
 package cq.game.fivechess.game;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import android.R.integer;
 import android.util.Log;
 
@@ -23,9 +26,9 @@ public class To3ComputerAI {
 	private int[][][]  white =null;
 	
 	//假想用户为防守方，电脑为进攻方
-	private int[][] plaValue ={ {2,6,173},
-								{0,5,7}};
-	private int[][] cpuValue ={ {0,3,166},
+	private int[][] plaValue ={ {2,9,173},
+								{0,4,7}};
+	private int[][] cpuValue ={ {0,6,166},
 							    {0,1,5}};
 	
 	private To3Game game;
@@ -137,7 +140,7 @@ public class To3ComputerAI {
 			    white[c.x][c.y][0] = cpuValue[counter][computerValue[0]]; //赋予cpuValue中的权值
                 computerValue[0] = 0;
                 counter = 0;
-                Log.d(TAG, "外层纵向：white["+c.x+"]["+c.y+"][0]"+white[c.x][c.y][0]);
+//                Log.d(TAG, "外层纵向：white["+c.x+"]["+c.y+"][0]"+white[c.x][c.y][0]);
                 
 //                问题分析：这里面的 white[c.x][c.y][0]在中层和内层又重新赋值，层次没有做区分导致最后的0的问题，
 //                层次对权值大小没有影响，只是作为一个标志，以示区分,不同层次的权值也要做大小比较，方便判断
@@ -374,7 +377,7 @@ public class To3ComputerAI {
 				white[c.x][c.y][3] = cpuValue[counter][computerValue[1]]; //赋予cpuValue中的权值
                 computerValue[1] = 0;
                 counter = 0;
-                Log.d(TAG, ".......外层横向：white["+c.x+"]["+c.y+"][1]"+white[c.x][c.y][1]);
+//                Log.d(TAG, ".......外层横向：white["+c.x+"]["+c.y+"][1]"+white[c.x][c.y][1]);
                 
                 
 //            	中层 该空点在边上 的横向
@@ -1006,8 +1009,11 @@ public class To3ComputerAI {
 	        int blackCollum = 0;
 	        int whiteRow = 0; 
 	        int whiteCollum = 0;
-
-		for (Coordinate c : gamePoints) {
+	        
+	        coordinates.clear();
+			coordinates.addAll(gamePoints);
+			//无序的遍历棋盘，给一些变化，避免过于死板
+		for (Coordinate c : coordinates) {
 			if (map[c.x][c.y] == 0) {
 
 				for (int k = 0; k < 6; k++) {
@@ -1028,7 +1034,7 @@ public class To3ComputerAI {
 
 //					为什么这里的值都是0? 是上面的updateValue权值分析方法没有做好?之所以出现这样的情况应该是外层之后到中层
 //					内层又重新赋值了0了
-					Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>白棋权值：white["+c.x+"]["+c.y+"]["+k+"]"+white[c.x][c.y][k]);
+//					Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>白棋权值：white["+c.x+"]["+c.y+"]["+k+"]"+white[c.x][c.y][k]);
 					if (white[c.x][c.y][k] > maxcValue) { //这里面写成maxpValue导致的错误
 						whiteRow = c.x;
 						whiteCollum = c.y;
@@ -1060,32 +1066,52 @@ public class To3ComputerAI {
 	/**
 	 * 成三吃子
 	 */
+	Set<Coordinate> coordinates =new HashSet<Coordinate>();//不保证顺序的Set集合
 	public Coordinate eatChess(int[][] map) {
 //		判断对方有无两子连续  这里为优先级为最高，因为己方吃完就到对方手
 //		有，吃其中一子
 //		3、无，则任意吃非对方成三的子
 		//1、有己方两子凉连续     吃堵住了己方三的对方子
 //		2、无，则 吃堵住己方已经成三的子
-		for (Coordinate c : gamePoints) {
+		
+//		首先应该找出是否有成二的点
+		Coordinate co =null;
+		coordinates.clear();
+		coordinates.addAll(gamePoints);
+		for (Coordinate c : coordinates) {
 			if (map[c.x][c.y]  == To3Game.BLACK && !(game.isThree(c.x, c.y, To3Game.BLACK))) {
 				// 对方成二的情况优先吃其子
-//				if (isTwo(c)) {
-//					return new Coordinate(c.x, c.y, To3Game.BLACK);
-//				}
-				return new Coordinate(c.x, c.y, To3Game.BLACK);
+				Log.i(TAG, "two : "+game.isTwo(c,To3Game.BLACK));
+				
+				if (game.isTwo(c,To3Game.BLACK) ==GameConstants.TWO_TWO) {
+//					有两条时，直接跳出
+					co= new Coordinate(c.x, c.y, To3Game.BLACK);
+					break;
+				}else if (game.isTwo(c,To3Game.BLACK) ==GameConstants.A_TWO) {
+//					有一条时记录该条，循环继续，co可替换之前的0条的情况
+					co= new Coordinate(c.x, c.y, To3Game.BLACK);
+					continue;
+				}else {
+					//该点没有条时，且也没有一条，这里co都替换不了之前的0和1条的
+					if (co==null) {
+						co= new Coordinate(c.x, c.y, To3Game.BLACK);
+					}
+				}
 			}
 		}
-		return null;
+		return co;
 	}
+	
 	
 	/**
 	 * 动子阶段的起始点
 	 */
-	public Coordinate moveStart(int[][] map){
+	public Coordinate moveStart(To3Game game){
 		//1、分析棋盘的权值（白 /黑）判断进攻还是防守
 		//  找到最大权值得点   
 //				找到距离该点最近的路线进行子力移动
 //		            
+		this.game =game;
 		return new Coordinate(1, 1, To3Game.WHITE);
 	}
 	

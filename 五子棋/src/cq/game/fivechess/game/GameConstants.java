@@ -26,5 +26,8 @@ public class GameConstants {
 	public static final int COMPUTER_EAT_CHESS = 1;
 	public static final int COMPUTER_CHESS_MOVE = 2;
 	
+	public static final int TWO_TWO = 2;
+	public static final int A_TWO = 1;
+	
 	
 }

@@ -616,6 +616,230 @@ public class To3Game {
         return false;
     }
     
+    public int isTwo(Coordinate c,int type) {
+    	    int  two=0;
+//		对每个点分析，每个点有四种情况出现两子  如果该点同时又有两个两子（两条），则权值提升
+    	//1、外层四条三 
+//		横向
+    		int bank=0;
+			int horizontal = 0;
+			int x =c.x;
+			int y=c.y;
+			for (int i = 0; i < 3; i++) {
+				if (x==1+6*i) {
+					if (y==1 ||y==13) {
+						//已成三
+						for (int j = 0; j < 3; j++) {
+							if (mGameMap[1+6*j][y] !=type) {
+								if (mGameMap[1+6*j][y] ==0) {
+									bank++;
+									continue;
+								}
+								break;
+							}
+							horizontal++;
+						}
+					}
+				}
+			}
+			if (horizontal==2 && bank==1) {
+				two++;
+			}
+			
+		//	纵向
+			bank=0;
+			int vertical = 0;
+			for (int i = 0; i < 3; i++) {
+				if (y==1+6*i) {
+					if (x==1 ||x==13) {
+						//已成三
+						for (int j = 0; j < 3; j++) {
+							if (mGameMap[x][1+6*j] !=type) {
+								if (mGameMap[x][1+6*j] ==0) {
+									bank++;
+									continue;
+								}
+								break;
+							}
+							vertical++;
+						}
+					}
+				}
+			}
+		 	if (vertical==2 && bank==1) {
+		 		two++;
+			}
+		 	
+		   //2、中层四条三
+		 	bank=0;
+		 	int midvertical = 0;
+			for (int i = 0; i < 3; i++) {
+				if (y==3+4*i) {
+					if (x==3 ||x==11) {
+						for (int j = 0; j < 3; j++) {
+							if (mGameMap[x][3+4*j]  !=type) {
+								if (mGameMap[x][3+4*j] ==0) {
+									bank++;
+									continue;
+								}
+								break;
+							}
+							midvertical++;
+						}
+					}
+				}
+			}
+			if (midvertical==2 && bank==1) {
+				two++;
+			}
+			
+			bank=0;
+			int midhorizontal = 0;
+			for (int i = 0; i < 3; i++) {
+				if (x==3+4*i) {
+					if (y==3 ||y==11) {
+						for (int j = 0; j < 3; j++) {
+							if (mGameMap[3+4*j][y] !=type) {
+								if (mGameMap[3+4*j][y] ==0) {
+									bank++;
+									continue;
+								}
+								break;
+							}
+							midhorizontal++;
+						}
+					}
+				}
+			}
+			if (midhorizontal==2 && bank==1) {
+				two++;
+			}
+			
+		   //3、内层四条三
+			bank=0;
+			int minvertical =0;
+			for (int i = 0; i < 3; i++) {
+				if (y==5+2*i) {
+					if (x==5 ||x==9) {
+						for (int j = 0; j < 3; j++) {
+							if (mGameMap[x][5+2*j] !=type) {
+								if (mGameMap[x][5+2*j] ==0) {
+									bank++;
+									continue;
+								}
+								break;
+							}
+							minvertical ++;
+						}
+					}
+				}
+			}
+			if (minvertical==2 && bank==1) {
+				two++;
+			}
+			
+			bank=0;
+			int minhorizontal = 0;
+		 	for (int i = 0; i < 3; i++) {
+				if (x==5+2*i) {
+					if (y==5 ||y==9) {
+						for (int j = 0; j < 3; j++) {
+							if ( mGameMap[5+2*j][y] !=type) {
+								if (mGameMap[5+2*j][y] ==0) {
+									bank++;
+									continue;
+								}
+								break;
+							}
+							minhorizontal++;
+						}
+					}
+				}
+			}
+		   	if (minhorizontal==2 && bank==1) {
+				two++;
+			}
+		   	
+		   //4、连接三层的四条三
+		   	//竖直方向
+		   	bank=0;
+		   	int topConnect=0;
+		   	int bottomConnect = 0;
+		   	for (int i = 0; i < 3; i++) {
+				
+		   		if (x==7) {
+		   			if (y==1+2*i) {
+		   				for (int j = 0; j < 3; j++) {
+		   					if (mGameMap[x][1+2*j] !=type) {
+		   						if (mGameMap[x][1+2*j] ==0) {
+									bank++;
+									continue;
+								}
+		   						break;
+		   					}
+		   					topConnect++;
+		   				}
+					}else if (y==13-2*i) {
+						for (int j = 0; j < 3;j++) {
+							if (mGameMap[x][13-2*j] !=type) {
+								if (mGameMap[x][13-2*j] ==0) {
+									bank++;
+									continue;
+								}
+								break;
+							}
+							bottomConnect++;
+						}
+					}
+		   		}
+			}
+		   	if (topConnect==2 || bottomConnect==2) {
+		   		if (bank==1) {
+		   			two++;
+				}
+			}
+		   	//水平方向
+		   	bank=0;
+		   	int lefConnect=0;
+		   	int rightConnect = 0;
+		   	for (int i = 0; i < 3; i++) {
+				
+		   		if (y==7) {
+		   			if (x==1+2*i) {
+		   				for (int j = 0; j < 3; j++) {
+		   					if (mGameMap[1+2*j][y] !=type) {
+		   						if (mGameMap[1+2*j][y] ==0) {
+									bank++;
+									continue;
+								}
+		   						break;
+		   					}
+		   					lefConnect++;
+		   				}
+					}else if (x==13-2*i) {
+						for (int j = 0; j < 3;j++) {
+							if (mGameMap[13-2*j][y] !=type) {
+								if (mGameMap[13-2*j][y] ==0) {
+									bank++;
+									continue;
+								}
+								break;
+							}
+							rightConnect++;
+						}
+					}
+		   		}
+			}
+		   	if (lefConnect==2 || rightConnect==2) {
+		   		if (bank==1) {
+		   			two++;
+				}
+			}
+		   	
+		return two;
+	}
+
+    
     private void sendGameRollBack(String initData) {
     	   Message msg = Message.obtain();
            msg.what = GameConstants.THREE_ROLLBACK;
