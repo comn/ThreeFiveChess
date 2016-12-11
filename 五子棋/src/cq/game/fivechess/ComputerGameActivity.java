@@ -137,16 +137,15 @@ public class ComputerGameActivity extends BaseActivity {
 			case GameConstants.COMPUTER_CHESS_MOVE:
 				Coordinate start =ai.moveStart(mGame);
 				Coordinate end =ai.moveEnd(mGame.getChessMap());
-				Toast.makeText(ComputerGameActivity.this, "白子从("+start.x+","+start.y+")移动到 ："
-						+"("+end.x+","+end.y+")", 0).show();
-//				mGameView.chessMove(start, end);
+//				Toast.makeText(ComputerGameActivity.this, "白子从("+start.x+","+start.y+")移动到 ："
+//						+"("+end.x+","+end.y+")", 0).show();
+				mGameView.chessMove(start, end,false);
 				break;
 			default:
 				break;
 			}
 			
-			
-			// 控制电脑手时的玩家悔棋。
+			// 控制电脑悔棋
 			if (isRollback) {
 				rollback();
 				isRollback = false;

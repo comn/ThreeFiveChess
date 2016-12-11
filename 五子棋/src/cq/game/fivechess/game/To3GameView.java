@@ -131,22 +131,31 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
     /**
      * 控制棋子移动
      */
-    public void chessMove(Coordinate start,Coordinate end) {
+    private void chessMove(Coordinate start,Coordinate end) {
+    	chessMove(start, end,true);
+	}
+//   分析： 吃子之后棋子不能移动
+    public void chessMove(Coordinate start, Coordinate end, boolean isTouchMove) {
     	int type = mGame.getChessMap()[start.x][start.y];
-    	if (mGame.getActive()!=type) {//非己手则不可移动
+    	
+    	if (mGame.getActive()!=type) {//非己手己子则不可移动
 			return;
 		}
     	
-//		chessMoveAnima(type);
+//		chessMoveAnima(type);isTouchMove
     	boolean clearChess = mGame.clearChess(start);
     	if (clearChess) {
     		mGame.clearedActions.add(new Coordinate(start.x, start.y, type));
-			mGame.addChess(end.x, end.y);
+    		if (isTouchMove) {
+    			mGame.addChess(end.x, end.y);
+			}else {
+				mGame.addChess(end, mGame.challenger);
+			}
 		}
 		drawGame();
 	}
-   
-    /**
+
+	/**
      *   棋子移动的动画
      * @param start
      * @param end
@@ -284,11 +293,21 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
             int type = mGame.getChessMap()[focus.x][focus.y];
             //动子阶段
             if (mGame.me.getmChesses()==0 && mGame.challenger.getmChesses()==0) {
+            	if (type!=0) {
+        			start.x =focus.x;
+        			start.y=focus.y;
+        			start.type =type;
+        		}
             	if(mGame.getMode() ==GameConstants.MODE_FIGHT){
             		handleChessMove(type);
             	}else if (mGame.getMode() ==GameConstants.MODE_SINGLE) {
+//            		成三吃子后的这段代码没有执行 ，原因：
+//            			成三吃子之后点的是白子，所以start.type == mGame.challenger.type
 					if (start.type != mGame.challenger.type) 
+//					{
+//						Toast.makeText(mContext, "棋子移动了", 0).show();
 						handleChessMove(type);
+//					}
 				}
 			}
            
@@ -326,120 +345,13 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
      * @param type
      */
 	private void handleChessMove(int type) {
-		if (type!=0) {
-			start.x =focus.x;
-			start.y=focus.y;
-			start.type =type;
-		}else {
 			end.x=focus.x;
 			end.y=focus.y;
 			end.type =type;
 			//判断结束点是否在开始点的旁边一个位置 是：可移动 否：不可移动
-			if(isNearBy(start,end) || exChangePoint(start,end)){
+			if(mGame.isNearBy(start,end) || mGame.exChangePoint(start,end)){
 				chessMove(start, end);
 			}
-		}
-	}
-
-    private boolean isNearBy(Coordinate start, Coordinate end) {
-    	//外层八个点
-//    	1.start在角上，end在中心
-    	if (start.x==1 || start.x==13) {
-			if (start.y==1 || start.y==13) {
-				if (end.x==7) {
-					if (end.y==1 || end.y==13) {
-						return true;
-					}
-				}else if(end.x==1 || end.x==13) {
-					if (end.y==7) {
-						return true;
-					}
-				}
-			}
-		}
-//    	2.start在中心上，end在中层中心
-    	if (start.x==7) {
-			if (start.y==1 || start.y==13) {
-				if (end.x==7) {
-					if (end.y==3 || end.y==11) {
-						return true;
-					}
-				}
-			}
-		}else if(start.x==1 || start.x ==13) {
-			if (start.y==7) {
-				if (end.y==7) {
-					if (end.x==3 ||end.x==11) {
-						return true;
-					}
-				}
-			}
-		}
-    	//中层八个点
-//    	1.start在角上
-    	if (start.x==3 || start.x==11) {
-			if (start.y==3 || start.y==11) {
-				if (end.x==7) {
-					if (end.y==3 || end.y==11) {
-						return true;
-					}
-				}else if(end.x==3 || end.x==11) {
-					if (end.y==7) {
-						return true;
-					}
-				}
-			}
-		}
-//    	2.start在中心上
-    	if (start.x==7) {
-			if (start.y==3 || start.y==11) {
-				if (end.x==7) {
-					if (end.y==5 || end.y==9) {
-						return true;
-					}
-				}
-			}
-		}else if(start.x==3 || start.x ==11) {
-			if (start.y==7) {
-				if (end.y==7) {
-					if (end.x==5 ||end.x==9) {
-						return true;
-					}
-				}
-			}
-		}
-    	
-    	//下层八个点
-//    	1.start在角上
-    	if (start.x==5 || start.x==9) {
-			if (start.y==5 || start.y==9) {
-				if (end.x==7) {
-					if (end.y==5 || end.y==9) {
-						return true;
-					}
-				}else if(end.x==5 || end.x==9) {
-					if (end.y==7) {
-						return true;
-					}
-				}
-			}
-		}
-    	
-		return false;
-	}
-   /**
-    *  开始结束的点位互换后也相邻
-    * @param start
-    * @param end
-    * @return 
-    */
-	private boolean exChangePoint(Coordinate start, Coordinate end) {
-		Coordinate coordinate =new Coordinate();
-		coordinate =start;
-		start =end;
-		end =coordinate;
-		
-		return isNearBy(start,end);
 	}
 
 	/**
@@ -627,7 +539,8 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
 						return;
 					}
 					boolean clearChess = mGame.clearChess(new Coordinate(x, y));
-					if (clearChess && !mGame.isGameEnd(x, y, player)) {//吃子成功后不可再吃
+					if (clearChess && !mGame.isGameEnd(x, y, player)) {
+						//吃子成功后不可再吃
 						eatChessCallBack=null;
 						//可添加子
 						mGame.setAddChess(true);

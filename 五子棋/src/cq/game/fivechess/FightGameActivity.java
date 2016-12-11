@@ -459,6 +459,7 @@ public class FightGameActivity extends Activity implements OnClickListener {
 	 * @param message
 	 */
 	private void sendChess(int x, int y,int des) {
+		if(mChatService==null)return;
 		// Check that we're actually connected before trying anything
 		if (mChatService !=null && (mChatService.getState() != BluetoothChatService.STATE_CONNECTED)) {
 			Toast.makeText(this, "未联机", Toast.LENGTH_SHORT).show();

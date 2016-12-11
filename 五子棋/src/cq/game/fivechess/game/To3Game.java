@@ -32,7 +32,7 @@ public class To3Game {
     int[][] mGameMap = null;
     Deque<Coordinate> mActions ;
     public Deque<Coordinate> eatedActions;
-    Deque<Coordinate> clearedActions;
+    public Deque<Coordinate> clearedActions;
     
     public static final int BLACK = 1;
     public static final int WHITE = 2;
@@ -186,6 +186,7 @@ public class To3Game {
      */
     public boolean eatChess(Coordinate o) {
     	if (clearChess(o) && !isGameEnd(o.x, o.y, o.type)) {
+			setAddChess(true);
     		//添加进已吃的子的集合
     		eatedActions.add(o);
     		return true;
@@ -290,7 +291,7 @@ public class To3Game {
      * 落子
      * @param x 横向下标
      * @param y 纵向下标
-     * @param player 游戏选手
+     * @param player 游戏选手 
      */
     public void addChess(int x, int y, Player player){
     	if (!isAddChess)return ;
@@ -314,7 +315,7 @@ public class To3Game {
     /**
      * 落子
      * @param c 下子位置
-     * @param player 游戏选手  这里为电脑调用
+     * @param player 游戏选手  这里为电脑或对手调用
      */
     public void addChess(Coordinate c, Player player){
         addChess(c.x, c.y, player);
@@ -838,7 +839,140 @@ public class To3Game {
 		   	
 		return two;
 	}
-
+    
+   /**
+    * 判断两个点是否相邻
+    */
+    public boolean isNearBy(Coordinate s, Coordinate e) {
+    	//外层八个点
+//    	1.start在角上，end在中心 问题：当start(13,1) 和 end(7,13)相邻
+    	if (s.x==1 && s.y==1) {
+			if (e.x==1&&e.y==7 || e.x==7&&e.y==1 ) {
+				return true;
+			}
+		}
+    	if (s.x==13 && s.y==1) {
+			if (e.x==7&&e.y==1 || e.x==13&&e.y==7 ) {
+				return true;
+			}
+		}
+    	if (s.x==1 && s.y==13) {
+			if (e.x==1&&e.y==7 || e.x==7&&e.y==13 ) {
+				return true;
+			}
+		}
+    	if (s.x==13 && s.y==13) {
+			if (e.x==13&&e.y==7 || e.x==7&&e.y==13 ) {
+				return true;
+			}
+		}
+    	
+//    	2.start在中心上，end在中层中心
+    	if (s.x==7&&s.y==1) {
+			if (e.x==7&&e.y==3) {
+				return true;
+			}
+		}
+    	if (s.x==13&&s.y==7) {
+			if (e.x==11&&e.y==7) {
+				return true;
+			}
+		}
+    	if (s.x==7&&s.y==13) {
+			if (e.x==7&&e.y==11) {
+				return true;
+			}
+		}
+    	if (s.x==1&&s.y==7) {
+			if (e.x==3&&e.y==7) {
+				return true;
+			}
+		}
+    	
+    	//中层八个点
+//    	1.start在角上
+    	if (s.x==3&&s.y==3) {
+			if (e.x==7&&e.y==3 || e.x==3&&e.y==7) {
+				return true;
+			}
+		}
+    	if (s.x==11&&s.y==3) {
+			if (e.x==7&&e.y==3 || e.x==11&&e.y==7) {
+				return true;
+			}
+		}
+    	if (s.x==3&&s.y==11) {
+			if (e.x==7&&e.y==11 || e.x==3&&e.y==7) {
+				return true;
+			}
+		}
+    	if (s.x==11&&s.y==11) {
+			if (e.x==7&&e.y==11 || e.x==11&&e.y==7) {
+				return true;
+			}
+		}
+//    	2.start在中心上
+    	if (s.x==7&&s.y==3) {
+			if (e.x==7&&e.y==5) {
+				return true;
+			}
+		}
+    	if (s.x==11&&s.y==7) {
+			if (e.x==9&&e.y==7) {
+				return true;
+			}
+		}
+    	if (s.x==7&&s.y==11) {
+			if (e.x==7&&e.y==9) {
+				return true;
+			}
+		}
+    	if (s.x==3&&s.y==7) {
+			if(e.x==5 && e.y==7){
+				return true;
+			}
+		}
+    	
+    	//下层八个点
+//    	1.start在角上
+    	if (s.x==5&&s.y==5) {
+			if (e.x==7&&e.y==5 || e.x==5&&e.y==7) {
+				return true;
+			}
+		}
+    	if (s.x==9&&s.y==5) {
+			if (e.x==7&&e.y==5 || e.x==9&&e.y==7) {
+				return true;
+			}
+		}
+    	if (s.x==5&&s.y==9) {
+			if (e.x==5&&e.y==7 || e.x==7&&e.y==9) {
+				return true;
+			}
+		}
+    	if (s.x==9&&s.y==9) {
+			if (e.x==7&&e.y==9 || e.x==9&&e.y==7) {
+				return true;
+			}
+		}
+    	
+		return false;
+	}
+    
+   /**
+    *  开始结束的点位互换后也相邻
+    * @param start
+    * @param end
+    * @return 
+    */
+    public boolean exChangePoint(Coordinate start, Coordinate end) {
+		Coordinate coordinate =new Coordinate();
+		coordinate =start;
+		start =end;
+		end =coordinate;
+		
+		return isNearBy(start,end);
+	}
     
     private void sendGameRollBack(String initData) {
     	   Message msg = Message.obtain();

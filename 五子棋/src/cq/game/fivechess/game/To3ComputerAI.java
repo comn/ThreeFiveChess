@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import android.R.integer;
@@ -32,6 +33,9 @@ public class To3ComputerAI {
 							    {0,1,5}};
 	
 	private To3Game game;
+	private Set<Coordinate> coordinates =new HashSet<Coordinate>();//不保证顺序的Set集合
+	private List<To3ChessWay> chessWays =new ArrayList<To3ChessWay>();
+	private To3ChessWay way;
 
 	public  To3ComputerAI(List<Coordinate> gamePoints) {
 		this.gamePoints =gamePoints;
@@ -48,6 +52,9 @@ public class To3ComputerAI {
      * 总思维，就是分析除此空点之相邻两点的落子情况。判断该位置权值;
      * 分两步：白方落子则遍历棋盘每个无子点，判断该无子点周围子力分布情况
      * 反之则 黑方 假想其为电脑方
+     * 
+     * 白棋：根据实时棋盘上黑棋分布情况，计算出每个可落点位的每个维度的权值
+     * 黑棋：————白棋——————————————————————————————————————————————————
      * @param map
      */
 //	把判断成三和isNearBy()结合做或许更好一点.
@@ -993,6 +1000,13 @@ public class To3ComputerAI {
 			}
 		}
 	}
+	
+	  int blackRow = 0; 
+      int blackCollum = 0;
+      int whiteRow = 0; 
+      int whiteCollum = 0;
+      int maxpValue = -10;
+      int maxcValue = -10;
 	/**
 	 * 
 	 * @param map
@@ -1002,13 +1016,6 @@ public class To3ComputerAI {
 	public Coordinate getPosition(int[][] map) {
 		    int maxpSum = 0;
 	        int maxcSum = 0;
-	        
-	        int maxpValue = -10;
-	        int maxcValue = -10;
-	        int blackRow = 0; 
-	        int blackCollum = 0;
-	        int whiteRow = 0; 
-	        int whiteCollum = 0;
 	        
 	        coordinates.clear();
 			coordinates.addAll(gamePoints);
@@ -1064,9 +1071,8 @@ public class To3ComputerAI {
 	}
 	
 	/**
-	 * 成三吃子
+	 * 电脑成三吃子
 	 */
-	Set<Coordinate> coordinates =new HashSet<Coordinate>();//不保证顺序的Set集合
 	public Coordinate eatChess(int[][] map) {
 //		判断对方有无两子连续  这里为优先级为最高，因为己方吃完就到对方手
 //		有，吃其中一子
@@ -1102,24 +1108,91 @@ public class To3ComputerAI {
 		return co;
 	}
 	
-	
 	/**
 	 * 动子阶段的起始点
 	 */
 	public Coordinate moveStart(To3Game game){
+		this.game =game;
+		int[][] map=game.getChessMap();
 		//1、分析棋盘的权值（白 /黑）判断进攻还是防守
 		//  找到最大权值得点   
 //				找到距离该点最近的路线进行子力移动
 //		            
-		this.game =game;
-		return new Coordinate(1, 1, To3Game.WHITE);
+//		接下来就是电脑的移动问题了
+		
+		
+//		还是博弈论 最终结果还是开发者智力的提现
+//		1、根据对黑子力分布，更新白方权值，分析白方可移动的子力
+//		为每一个可移动路线做评估，分析可移动的白子，每个白子周围空点位数，对应的就是路线数
+//		目标：分析判断出最优路线（其结果是：有利于更快到达权值最大的点）
+		for (Coordinate c : gamePoints) {
+			if (map[c.x][c.y] ==To3Game.WHITE) {
+//				该白子周围空点位有：
+//				获取该点附近的点
+				
+			/*	方式一：麻烦，优点，可节省cup性能
+			 * List<Coordinate> npList = getNearByPoint(c);
+				for (Coordinate co : npList) {
+					//在地图上为空的点
+					if (map[co.x][co.y] ==0) {
+//						存在，则c可作为起始点，co可作为结束点，它们可构成一条路线
+//						这里面只能拿到最后遍历的路线，作为起止点
+//						要做模拟几步棋子移动后的情况分析，才可了解哪一个路线为当前最优选择
+						chessWays.add(new To3ChessWay(c, co));
+					}
+				}*/
+				
+				// 方式二：稍微消耗点cpu性能
+				for (Coordinate co : gamePoints) {
+					if (map[co.x][co.y] ==0) {
+						if(game.isNearBy(c,co) || game.exChangePoint(c,co)) {
+							Log.d(TAG, "start["+c.x+"]["+c.y+"]"+"--- end["+co.x+"]["+co.y+"]");
+							chessWays.clear();
+							chessWays.add(new To3ChessWay(c, co));
+						}
+					}
+				}
+				
+			}
+		}
+//		遍历所有的路线，找到权值最大的路线，点连成线，有利于最快到达权值最大的点的线路 权线值最大
+//		1、先找到最大的权值点
+			updateValue(map);
+			Coordinate maxPoint = getPosition(map);
+			Coordinate maxWhite =new Coordinate(whiteRow, whiteCollum);
+			Coordinate maxBlack =new Coordinate(blackRow, blackCollum);
+//			拿白子最大权值点
+//			拿黑子最大权值点
+			
+//		   2、找到能最快到达的线路            
+//		如果对方到达最大权值的线路短于己方，则防守
+//			同等级的最大权值点出现时，以线路短作为进攻防守的依据（）
+		
+		
+		way =chessWays.get(new Random().nextInt(chessWays.size()));
+		
+		return way.start;
 	}
 	
+	/**
+	 * @param start 地图中的点
+	 * @return  start相邻的点的集合
+	 */
+	private List<Coordinate> getNearByPoint(Coordinate s) {
+		List<Coordinate> list=new ArrayList<Coordinate>();
+		if (s.x==1 && s.y==1) {
+			list.add(new Coordinate(1, 7));
+			list.add(new Coordinate(7, 1));
+		}
+		
+		return list;
+	}
+
 	/**
 	 * 动子时的结束点
 	 */
 	public Coordinate moveEnd(int[][] map) {
-		return  new Coordinate(1, 7, To3Game.WHITE);
+		return  way.end;
 	}
 	
 	
