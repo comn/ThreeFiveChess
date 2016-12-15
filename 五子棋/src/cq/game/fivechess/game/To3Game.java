@@ -168,7 +168,11 @@ public class To3Game {
 		}
     	
     }
-    
+    /**
+     *  清除地图上的点
+     * @param o
+     * @return 
+     */
     public boolean clearChess(Coordinate o) {
     	if (o==null) {
 			throw new RuntimeException("o is null");
@@ -180,7 +184,16 @@ public class To3Game {
 		}
     	return false;
 	}
-    
+    /**
+     * 还原地图上的点
+     */
+    public boolean restoreChess(Coordinate o) {
+    	if (o!=null) {
+    			mGameMap[o.x][o.y] = o.type;
+    			return true;
+		}
+    	return false;
+	}
     /**
      * 吃掉
      */
@@ -1010,7 +1023,7 @@ public class To3Game {
  		
  	}
     
-    private void sendGameResult(int player){
+    public void sendGameResult(int player){
         Message msg = Message.obtain();
         msg.what = GameConstants.GAME_OVER;
         msg.arg1 = player;

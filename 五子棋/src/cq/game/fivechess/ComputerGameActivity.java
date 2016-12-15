@@ -12,6 +12,7 @@ import cq.game.fivechess.game.Coordinate;
 import cq.game.fivechess.game.Game;
 import cq.game.fivechess.game.GameConstants;
 import cq.game.fivechess.game.To3ComputerAI;
+import cq.game.fivechess.game.To3Game;
 /**
  * 
  * @author Flsolate
@@ -20,6 +21,7 @@ import cq.game.fivechess.game.To3ComputerAI;
  */
 public class ComputerGameActivity extends BaseActivity {
 
+	public static final String TAG = ComputerGameActivity.class.getName();
 	Handler mRefreshHandler =new Handler(){
 		@Override
 		public void handleMessage(Message msg) {
@@ -137,9 +139,15 @@ public class ComputerGameActivity extends BaseActivity {
 			case GameConstants.COMPUTER_CHESS_MOVE:
 				Coordinate start =ai.moveStart(mGame);
 				Coordinate end =ai.moveEnd(mGame.getChessMap());
-//				Toast.makeText(ComputerGameActivity.this, "白子从("+start.x+","+start.y+")移动到 ："
-//						+"("+end.x+","+end.y+")", 0).show();
-				mGameView.chessMove(start, end,false);
+				Toast.makeText(ComputerGameActivity.this, "白子从("+start.x+","+start.y+")移动到 ："
+						+"("+end.x+","+end.y+")", 0).show();
+				Log.d(TAG,"白子从("+start.x+","+start.y+")移动到 ："
+						+"("+end.x+","+end.y+")");
+				if (start==null && end==null) {
+					mGame.sendGameResult(To3Game.BLACK);//黑方胜
+				}else {
+					mGameView.chessMove(start, end,false);
+				}
 				break;
 			default:
 				break;

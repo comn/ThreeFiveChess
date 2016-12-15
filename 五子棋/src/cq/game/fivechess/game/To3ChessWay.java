@@ -5,11 +5,15 @@ public class To3ChessWay {
 	Coordinate start;
 	Coordinate end;
 	
+	public To3ChessWay() {
+	}
+	
 	public To3ChessWay(Coordinate start, Coordinate end) {
 		super();
 		this.start = start;
 		this.end = end;
 	}
+
 	public Coordinate getStart() {
 		return start;
 	}
