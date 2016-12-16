@@ -16,7 +16,7 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/chessboard_bg" >
 
-        <cq.game.fivechess.game.GameView
+        <com.yang.chess.game.GameView
             android:id="@+id/game_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

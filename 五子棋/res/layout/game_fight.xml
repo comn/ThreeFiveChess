@@ -17,7 +17,7 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/chessboard_bg" >
 
-        <cq.game.fivechess.game.To3GameView
+        <com.yang.chess.game.To3GameView
             android:id="@+id/game_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@drawable/btn_bg_game"
-            android:text="蓝牙联机" />
+            android:text="@string/about" />
     </LinearLayout>
 
     <LinearLayout
