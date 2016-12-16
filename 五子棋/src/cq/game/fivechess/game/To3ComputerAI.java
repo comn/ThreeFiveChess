@@ -1345,6 +1345,7 @@ public class To3ComputerAI {
 	
 	/**
 	 * 动子阶段的起始点                 哎，，，，，，，这制作的电脑实在是太傻了，有待研究！
+	 * 电脑已经有一点智能了，不过电脑目前只能看到一步子，动子阶段的智能化目前还有待加强
 	 */
 	public Coordinate moveStart(To3Game game){
 		this.game =game;
@@ -1414,18 +1415,11 @@ public class To3ComputerAI {
 		if (maxcValue >maxpValue) {
 			//白子的防守 判断该点周围是否有白子的路
 			if (!isWaysContances(whiteRow,whiteCollum)){
-				chooseWhiteWay(blackRow,blackCollum);
+				whiteChessMove(blackRow, blackCollum);
 			}
 		}else  {
 			//包含，阻止黑子想要到往的路
-			if (!isWaysContances(blackRow,blackCollum)) {//黑方想要落的点没有白子则，随机选择一条路线
-				if (whiteWays.size()>0) {
-					way=whiteWays.get(new Random().nextInt(whiteWays.size()));
-				}else {
-//					无路可走了，游戏结束，我输了
-					way =new To3ChessWay();
-				}
-			}
+			whiteChessMove(blackRow, blackCollum);
 		}
 //		电脑还是有点二
 		
@@ -1465,7 +1459,7 @@ public class To3ComputerAI {
 							}else { //不成三,则还原该点，还是记录way
 								//到这里是模拟走了一步  且是走的目标是当前棋局的最大权值点
 								game.restoreChess(way.start);
-								this.way =way;
+//								this.way =way;
 							}
 						}
 					}
@@ -1480,22 +1474,60 @@ public class To3ComputerAI {
 		return way.start;
 	}
 
-	private void chooseWhiteWay(int whiteRow, int whiteCollum) {
+	private void whiteChessMove(int blackRow, int blackCollum) {
+//		首先：在包含的情况中有三还要控制成三
+		if (!isWaysContances(blackRow,blackCollum)) {//黑方想要落的点没有白子则，随机选择一条路线
+			if (whiteWays.size()>0) {
+				way=whiteWays.get(new Random().nextInt(whiteWays.size()));
+			}else {
+//					无路可走了，游戏结束，我输了
+				way =new To3ChessWay();
+			}
+		}
+	}
+
+	/*private void chooseWhiteWay(int whiteRow, int whiteCollum) {
 		for (To3ChessWay w : whiteWays) {
 			if (w.end.x==whiteRow && w.end.y==whiteCollum) {
 				this.way= w;
 			}
 		}
-	}
+	}*/
 
 	private boolean isWaysContances(int blackRow, int blackCollum) {
+		boolean flag= false;
 		for (To3ChessWay way : whiteWays) {
 			if (way.end.x==blackRow && way.end.y==blackCollum) {
-				this.way =way;
-				return true;
+//				有白子的成三情况下要优先成三
+				if (game.clearChess(way.start)) {
+					//假设该点移动一步，判断是否成三
+					game.setChess(way.end, game.WHITE);
+					if (game.isThree(way.end.x, way.end.y, way.start.type)) {
+//						成三线路没有执行不知道为什么？
+						//记录该路线，即为所求
+						this.way =way;
+						chessRestore(way);
+						Log.d(TAG, "isToThree_____________"+"true");
+						return true;
+					}else { //不成三,则还原该点 没有成三的情况发生则 选择其中一条路
+						//到这里是模拟走了一步  且是走的目标是当前棋局的最大权值点
+						chessRestore(way);
+						this.way=way;
+						Log.d(TAG, "start("+way.start.x+"，"+way.start.y+"，"+way.start.type+")"+game.WHITE);
+						flag =true;
+					}
+				}
 			}
 		}
-		return false;
+		return flag;
+	}
+	/**
+	 * 棋子还原
+	 * @param way
+	 */
+	private void chessRestore(To3ChessWay way) {
+		game.restoreChess(way.start);
+		game.clearChess(way.end,game.WHITE);
 	}
 
 	private void findWays(To3Game game, int[][] map) {

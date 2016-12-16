@@ -195,6 +195,25 @@ public class To3Game {
     	return false;
 	}
     /**
+     * 清除地图上的点
+     * @param o
+     * @param type
+     */
+    public  void clearChess(Coordinate o,int type){
+	   if(o!=null){
+		   o.type=type;
+		   clearChess(o);
+	   }
+    }
+    /**
+     * 设置地图子力
+     */
+    public void setChess(Coordinate c,int type){
+    	if (c!=null) {
+    		mGameMap[c.x][c.y] = type;
+		}
+    }
+    /**
      * 吃掉
      */
     public boolean eatChess(Coordinate o) {

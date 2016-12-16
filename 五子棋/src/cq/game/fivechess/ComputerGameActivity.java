@@ -139,15 +139,16 @@ public class ComputerGameActivity extends BaseActivity {
 			case GameConstants.COMPUTER_CHESS_MOVE:
 				Coordinate start =ai.moveStart(mGame);
 				Coordinate end =ai.moveEnd(mGame.getChessMap());
-				Toast.makeText(ComputerGameActivity.this, "白子从("+start.x+","+start.y+")移动到 ："
-						+"("+end.x+","+end.y+")", 0).show();
-				Log.d(TAG,"白子从("+start.x+","+start.y+")移动到 ："
-						+"("+end.x+","+end.y+")");
 				if (start==null && end==null) {
 					mGame.sendGameResult(To3Game.BLACK);//黑方胜
-				}else {
-					mGameView.chessMove(start, end,false);
+					break;
 				}
+//				Toast.makeText(ComputerGameActivity.this, "白子从("+start.x+","+start.y+")移动到 ："
+//						+"("+end.x+","+end.y+")", 0).show();
+				Log.d(TAG,"白子从("+start.x+","+start.y+")移动到 ："
+						+"("+end.x+","+end.y+")");
+		
+				mGameView.chessMove(start, end,false);
 				break;
 			default:
 				break;
