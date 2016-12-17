@@ -15,4 +15,5 @@ public class BluetoothConstants {
 	public static final int CHALLENGER_ADD_CHESS = 7;
 	public static final int MESSAGE_IMFOR = 4;
 	public static final int CHALLENGER_EAT_CHESS = 8;
+	public static final int CHALLENGER_CHESS_MOVE = 9;
 }

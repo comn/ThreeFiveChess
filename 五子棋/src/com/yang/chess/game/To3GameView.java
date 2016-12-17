@@ -147,6 +147,10 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
     	if (clearChess) {
     		mGame.clearedActions.add(new Coordinate(start.x, start.y, type));
     		if (isTouchMove) {
+//    			在蓝牙模式中要把start点和结束点发送给对方
+    			if (mGame.getMode()==GameConstants.MODE_BLUETOOTH) {
+    				mGame.sendMoveStart(start);
+    			}
     			mGame.addChess(end.x, end.y);
 			}else {
 				mGame.addChess(end, mGame.challenger);

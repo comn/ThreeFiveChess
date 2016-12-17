@@ -34,30 +34,38 @@
         android:orientation="horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp" >
-
-        <LinearLayout
+        
+	<RelativeLayout
             android:id="@+id/black_area"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2" >
+            
+         <TextView
+                android:id="@+id/black_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_black_area"
+                android:text="@string/black"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+         
+        <LinearLayout
+            android:id="@+id/ll_black_area"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_weight="2"
+            android:layout_centerVertical="true"
             android:orientation="horizontal" >
 
+<!--           android:layout_gravity="center_vertical"控制在外部线性布局中的位置 -->
+<!--    android:gravity="right" 控制内部元素在组件中的位置-->
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/black_large" />
-
-            <TextView
-                android:id="@+id/black_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/black"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
+            
             <TextView
                 android:id="@+id/black_count"
                 android:layout_width="wrap_content"
@@ -81,10 +89,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="right"
+                android:text="0"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
         </LinearLayout>
-
+  	</RelativeLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,7 +121,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/white_chess"
+                android:layout_below="@id/white_chess"
+                android:layout_alignParentRight="true"
                 android:text="@string/white"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
@@ -123,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@id/white_name"
+                android:layout_toLeftOf="@id/white_chess"
                 android:text="9"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
@@ -143,6 +153,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/white_active"
                 android:gravity="left"
+                android:text="0"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
         </RelativeLayout>
@@ -198,9 +209,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone" 
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center">
+        android:visibility="gone" >
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -209,9 +220,9 @@
         <TextView
             android:id="@+id/tv_loading"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
+            android:layout_height="wrap_content"
             android:text="loading,,,,,,,,"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
 </RelativeLayout>

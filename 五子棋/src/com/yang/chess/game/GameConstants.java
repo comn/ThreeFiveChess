@@ -28,6 +28,7 @@ public class GameConstants {
 	
 	public static final int TWO_TWO = 2;
 	public static final int A_TWO = 1;
-	
+//	蓝牙中移动的开始点
+	public static final int CHESS_MOVE_START = 5;
 	
 }

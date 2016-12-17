@@ -4,7 +4,7 @@ public class Player {
 
     String mName;
     // 白子还是黑子
-    int type;
+    public int type;
     // 胜局
     int mWin;
     // 败局
@@ -18,23 +18,23 @@ public class Player {
     }
     
     public Player(int type){
-        if (type == Game.WHITE){
-            this.mName = "White";
-        } else if (type == Game.BLACK){
-            this.mName = "Black";
-        }
-        this.type = type;
+        initPlayer(type);
     }
+    
     public Player(int type,int mChesses){
-        if (type == Game.WHITE){
-            this.mName = "White";
-        } else if (type == Game.BLACK){
-            this.mName = "Black";
-        }
-        this.type = type;
+        initPlayer(type);
         this.mChesses =mChesses;
     }
     
+	private void initPlayer(int type) {
+		if (type == Game.WHITE){
+            this.mName = "White";
+        } else if (type == Game.BLACK){
+            this.mName = "Black";
+        }
+        this.type = type;
+	}
+	
     public int getType(){
         return this.type;
     }

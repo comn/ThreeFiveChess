@@ -462,7 +462,16 @@ public class To3Game {
         msg.obj = new Coordinate(x, y, type);
         mNotify.sendMessage(msg);
     }
-    
+    /**
+     * 动子阶段时棋子移动的开始点
+     * @param start
+     */
+    public void sendMoveStart(Coordinate start){
+        Message msg = new Message();
+        msg.what = GameConstants.CHESS_MOVE_START;
+        msg.obj = new Coordinate(start.x, start.y, start.type);
+        mNotify.sendMessage(msg);
+    }
     private void sendAddChess(int x, int y,int type){
         Message msg = new Message();
         msg.what = GameConstants.ADD_CHESS;

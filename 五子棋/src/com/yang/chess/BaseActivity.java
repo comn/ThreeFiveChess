@@ -84,13 +84,13 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 	}
 
 	public void initGame(Handler mRefreshHandler, int mode) {
-		initGame(mRefreshHandler, mode,false);
+		initGame(mRefreshHandler, mode,true);
 	}
 
 	private void initViews() {
 		mGameView = (To3GameView) findViewById(R.id.game_view);
-		mBlackWin = (TextView) findViewById(R.id.black_win);
 		mBlackActive = (ImageView) findViewById(R.id.black_active);
+		mBlackWin = (TextView) findViewById(R.id.black_win);
 		mWhiteWin = (TextView) findViewById(R.id.white_win);
 		mWhiteActive = (ImageView) findViewById(R.id.white_active);
 		mBChesses = (TextView) findViewById(R.id.black_count);
@@ -154,6 +154,18 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 		b.show();
 	}
 	
+	protected void setStatus(Handler mRefreshHandler,String string) {
+		progress_bar.setVisibility(View.VISIBLE);
+		tv_loading.setText(string);
+		mRefreshHandler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				progress_bar.setVisibility(View.GONE);
+			}
+		}, 6000);
+	}
+	
 	public abstract void restart() ;
 	
 	public void rollback() {
@@ -162,6 +174,16 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.restart:
+			  restart();
+			break;
+		case R.id.rollback:
+			rollback();
+			break;
+		default:
+			break;
+		}
 	}
 	
 	

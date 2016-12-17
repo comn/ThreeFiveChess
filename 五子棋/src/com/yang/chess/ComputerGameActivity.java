@@ -1,12 +1,5 @@
 package com.yang.chess;
 
-import com.yang.chess.game.ComputerAI;
-import com.yang.chess.game.Coordinate;
-import com.yang.chess.game.Game;
-import com.yang.chess.game.GameConstants;
-import com.yang.chess.game.To3ComputerAI;
-import com.yang.chess.game.To3Game;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -14,6 +7,12 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.yang.chess.game.Coordinate;
+import com.yang.chess.game.Game;
+import com.yang.chess.game.GameConstants;
+import com.yang.chess.game.To3ComputerAI;
+import com.yang.chess.game.To3Game;
 /**
  * 
  * @author Flsolate
