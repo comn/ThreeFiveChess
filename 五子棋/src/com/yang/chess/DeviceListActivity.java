@@ -165,8 +165,7 @@ public class DeviceListActivity extends Activity {
             // Create the result Intent and include the MAC address
             Intent intent = new Intent();
             intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
-            //设置回调结果
-            // Set result and finish this Activity,结束当前activity执行之前activity的onActivityResult方法
+            // Set result and finish this Activity
             setResult(Activity.RESULT_OK, intent);
             finish();
         }

@@ -20,8 +20,6 @@ import com.yang.chess.R;
 
 /**
  * 负责游戏的显示，游戏的逻辑判断在Game.java中
- * @author cuiqing
- *
  */
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
@@ -105,7 +103,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         int width = View.MeasureSpec.getSize(widthMeasureSpec);
         Log.d(TAG, "width="+width);
         if(mGame != null){
-            if (width % mGame.getWidth() == 0){//宽度能被棋盘宽度整除
+            if (width % mGame.getWidth() == 0){
                 float scale = ((float)mGame.getHeight()) / mGame.getWidth();
                 int height = (int) (width*scale);
                 setMeasuredDimension(width, height);
@@ -113,7 +111,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                 width = width / mGame.getWidth() * mGame.getWidth();
                 float scale = ((float)mGame.getHeight()) / mGame.getWidth();
                 int height = (int) (width*scale);
-                setMeasuredDimension(width, height);//确定GameView最终宽高
+                setMeasuredDimension(width, height);
                 Log.d(TAG, "width="+width+"  height="+height);
             }
         } else {
@@ -130,7 +128,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         if (mGame != null) {
             mChessboardWidth = mGame.getWidth();
             mChessboardHeight = mGame.getHeight();
-            mChessSize = (right - left) / mChessboardWidth;//棋子大小
+            mChessSize = (right - left) / mChessboardWidth;
             Log.d(TAG, "mChessSize=" + mChessSize + " mChessboardWidth="
                     + mChessboardWidth + " mChessboardHeight"
                     + mChessboardHeight);
@@ -273,7 +271,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         int[][] chessMap = mGame.getChessMap();
         //遍历棋盘，画所有已落的棋子。
         for (int x = 0; x < chessMap.length; ++x){
-            for (int y = 0; y < chessMap[0].length; ++y){//x=0的一维数组长度
+            for (int y = 0; y < chessMap[0].length; ++y){
                 int type = chessMap[x][y];
                 if (type == Game.BLACK){
                     canvas.drawBitmap(mBlack, x*mChessSize, y*mChessSize, chessPaint);

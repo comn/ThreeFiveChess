@@ -77,7 +77,6 @@ public class FightGameActivity extends Activity implements OnClickListener {
 				}
 				updateScore(black, white);
 				break;
-				//棋盘中添加棋子后在这里更新UI变化
 			case GameConstants.ADD_CHESS:
 				Coordinate c =(Coordinate) msg.obj;
 				if (c.type == Game.BLACK) {
@@ -100,7 +99,7 @@ public class FightGameActivity extends Activity implements OnClickListener {
 					mGameView.eatChess(Game.BLACK);
 				}
 				break;
-			case GameConstants.CHANGE_ACTIVE:// 换手
+			case GameConstants.CHANGE_ACTIVE:
 				Log.d(TAG, mGame.getActive() + "");
 				updateActive(mGame);
 				break;
@@ -111,7 +110,7 @@ public class FightGameActivity extends Activity implements OnClickListener {
 				}
 				break;
 				
-				//蓝牙模块
+				//蓝牙
 			case GameConstants.BLUETOOTH_ADD_CHESS:
 				Coordinate co =(Coordinate) msg.obj;
 				me.downChess();
@@ -142,8 +141,8 @@ public class FightGameActivity extends Activity implements OnClickListener {
 				case BluetoothChatService.STATE_CONNECTING:
 					setStatus("正在联机..");
 					break;
-				case BluetoothChatService.STATE_LISTEN: //开始状态
-				case BluetoothChatService.STATE_NONE: //停止状态
+				case BluetoothChatService.STATE_LISTEN: 
+				case BluetoothChatService.STATE_NONE: 
 					setStatus("未联机");
 					break;
 				}
@@ -170,26 +169,22 @@ public class FightGameActivity extends Activity implements OnClickListener {
 				Coordinate coordinate = new Coordinate(e[2], e[3],challenger.getType());
 				boolean clearChess = mGame.clearChess(coordinate);
 				if (clearChess) {
-					//换手
 					mGame.sendChangeActive();
-					//添加进已吃的子的集合
 					mGame.eatedActions.add(coordinate);
 				}
-//				,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 				break;
 			case BluetoothConstants.MESSAGE_TOAST:
 				Toast.makeText(getApplicationContext(),
 						msg.getData().getString(BluetoothConstants.TOAST),
 						Toast.LENGTH_SHORT).show();
 				break;
-				
                 
-			case BluetoothConstants.MESSAGE_WRITE:// 已发送成功的历史消息
+			case BluetoothConstants.MESSAGE_WRITE:
 				byte[] writeBuf = (byte[]) msg.obj;
 				// construct a string from the buffer
 				String writeMessage = new String(writeBuf);
 				break;
-			case BluetoothConstants.MESSAGE_READ:// 对方成功发来的消息
+			case BluetoothConstants.MESSAGE_READ:
 				byte[] readBuf = (byte[]) msg.obj;
 				// construct a string from the valid bytes in the buffer
 				String readMessage = new String(readBuf, 0, msg.arg1);
@@ -322,21 +317,9 @@ public class FightGameActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.rollback:
 			if (black.getmChesses() == 0 && white.getmChesses() == 0) {
-				// 动子阶段的悔棋
-				// 1、一般悔棋
-				// 2、 吃子悔棋
 				mGame.moveRollBack();
 				mGame.moveRollBack();
 			} else {
-				// 落子阶段的悔棋
-				// 1、己方成三己方悔棋
-				// 吃对方子 之前：己方悔棋 双方各退回一子——只能换一次手
-				// 之后：己方悔棋 双方各回退一子 ——被吃的子还原——退回到 重新吃子的状态
-				// 2、对方成三，己方悔棋
-				// 己方悔棋 被吃的子还原 ——双方各回退一子
-
-				// 3、落子悔棋，双方各悔一子，
-
 				mGame.rollback();
 				mGame.rollback();
 				black.rollbackChess();
@@ -376,7 +359,7 @@ public class FightGameActivity extends Activity implements OnClickListener {
 			Toast.makeText(this, "蓝牙不可用", 0).show();
 			return;
 		}
-		if (!mBluetoothAdapter.isEnabled()) {// 没打开，则开启
+		if (!mBluetoothAdapter.isEnabled()) {
 			Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(intent, REQUEST_ENABLE_BT);
 		} else {
@@ -435,7 +418,6 @@ public class FightGameActivity extends Activity implements OnClickListener {
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_SECURE:
-			// 点击列表设备时，执行以下方法
 			if (resultCode == Activity.RESULT_OK) {
 				connectDevice(data, true);
 			}

@@ -19,9 +19,6 @@ import static com.yang.chess.net.ConnectConstants.*;
 /**
  * 联机传输<br>
  * 传输棋盘信息给对方
- * 
- * 主要使用TCP通信
- *
  */
 public class ConnectedService {
 
@@ -132,9 +129,6 @@ public class ConnectedService {
                 } else {
                     Socket s = new Socket();
                     InetSocketAddress addr = new InetSocketAddress(mIp, TCP_PORT);
-                    /* 连接失败尝试重连，重试8次
-                     * 因为机器性能不一样不能保证作为Server端的Activity先于客户端启动
-                     */
                     int retryCount = 0;
                     while (retryCount < 8){
                         try {
@@ -168,12 +162,10 @@ public class ConnectedService {
                 is = mSocket.getInputStream();
                 while (!isStop){
                     if (is.read(buf) == -1){
-                        // 连接断开
                         break;
                     }
                     if (DEBUG) Log.d(TAG, "tcp received:"+Arrays.toString(buf));
                     int length = buf[0];
-                    // 从buffer中截取收到的数据
                     byte[] body = new byte[length];
                     System.arraycopy(buf, 1, body, 0, length);
                     processNetData(body);
@@ -220,7 +212,6 @@ public class ConnectedService {
                     return;
                 }
                 OutputStream os = s.getOutputStream();
-                // 发送数据
                 os.write(data);
                 os.flush();
             } catch (IOException e) {
@@ -243,13 +234,13 @@ public class ConnectedService {
         case CONNECT_ADD_CHESS:
             notifyAddChess(data[1], data[2]);
             break;
-        case ROLLBACK_ASK: //对方请求悔棋
+        case ROLLBACK_ASK: 
             mRequestHandler.sendEmptyMessage(ROLLBACK_ASK);
             break;
-        case ROLLBACK_AGREE://同意己方悔棋要求
+        case ROLLBACK_AGREE:
             mRequestHandler.sendEmptyMessage(ROLLBACK_AGREE);
             break;
-        case ROLLBACK_REJECT://拒绝己方悔棋要求
+        case ROLLBACK_REJECT:
             mRequestHandler.sendEmptyMessage(ROLLBACK_REJECT);
             break;
         default:

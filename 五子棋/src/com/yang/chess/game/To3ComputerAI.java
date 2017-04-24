@@ -14,7 +14,7 @@ import android.util.Log;
  * 
  * @author Flsolate
  * @date 2016-10-6
- * @description 成三的电脑算法    分析数据、按照人大脑中的思维来模拟过程,所以人脑工程的研究能促进人工智能的发展
+ * @description 成三的电脑算法    分析数据
  */
 public class To3ComputerAI {
 	private static final String TAG = "To3ComputerAI";
@@ -51,17 +51,9 @@ public class To3ComputerAI {
 	}
     /**
      * 总思维，就是分析除此空点之相邻两点的落子情况。判断该位置权值;
-     * 分两步：白方落子则遍历棋盘每个无子点，判断该无子点周围子力分布情况
-     * 反之则 黑方 假想其为电脑方
-     * 
-     * 白棋：根据实时棋盘上黑棋分布情况，计算出每个可落点位的每个维度的权值
-     * 黑棋：————白棋——————————————————————————————————————————————————
      * @param map
      */
-//	把判断成三和isNearBy()结合做或许更好一点.
 	private void updateValue(int[][] map) {
-		//初步分两个维度：纵向、横向、
-		//构想一个维度：奇招维度
 		 int[] computerValue = {0,0};
 	     int[] playerValue = {0,0};
 //	     一、遍历棋盘上所有空点 
@@ -80,9 +72,9 @@ public class To3ComputerAI {
 						}
 						  if(map[c.x][1+i*6]== 0)
 	                            break;
-					   if(map[c.x][1+i*6] == To3Game.WHITE)//白子
+					   if(map[c.x][1+i*6] == To3Game.WHITE)
                         {
-                            counter ++;//跳往第二层
+                            counter ++;
                             break;
                         }
 					}
@@ -95,7 +87,7 @@ public class To3ComputerAI {
 						}
 					    if(map[c.x][13-6*i]== 0)
 	                            break;
-					   if(map[c.x][13-6*i] == To3Game.WHITE)//白子
+					   if(map[c.x][13-6*i] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
@@ -106,15 +98,6 @@ public class To3ComputerAI {
 				//2、该空点在边上 的纵向
 				if(c.x==1 || c.x==13) {
 					if (c.y==7) {
-					/*  if (map[c.x][1] ==To3Game.BLACK || map[c.x][13] ==To3Game.BLACK) { 
-							// 此处两个点都为黑则只computerValue[0] ++一次
-							computerValue[0] ++;
-							if (map[c.x][1] ==To3Game.BLACK && map[c.x][13] ==To3Game.BLACK) {
-								computerValue[0] ++;
-							}
-						}else if (map[c.x][1] ==To3Game.WHITE || map[c.x][13] ==To3Game.WHITE) {
-							counter++;
-						}*/
 					  
 						if (map[c.x][1] ==To3Game.BLACK && map[c.x][13] ==To3Game.BLACK) {
 							computerValue[0] ++;
@@ -136,7 +119,7 @@ public class To3ComputerAI {
 							}
 							if(map[c.x][1+2*i]== 0)
 								break;
-							if(map[c.x][1+2*i] == To3Game.WHITE)//白子
+							if(map[c.x][1+2*i] == To3Game.WHITE)
 							{
 								counter ++;
 								break;
@@ -150,7 +133,7 @@ public class To3ComputerAI {
 							}
 							if(map[c.x][13-2*i]== 0)
 								break;
-							if(map[c.x][13-2*i] == To3Game.WHITE)//白子
+							if(map[c.x][13-2*i] == To3Game.WHITE)
 							{
 								counter ++;
 								break;
@@ -158,15 +141,10 @@ public class To3ComputerAI {
 						}
 					}
 				}
-			    white[c.x][c.y][0] = cpuValue[counter][computerValue[0]]; //赋予cpuValue中的权值
+			    white[c.x][c.y][0] = cpuValue[counter][computerValue[0]]; 
                 computerValue[0] = 0;
                 counter = 0;
 //                Log.d(TAG, "外层纵向：white["+c.x+"]["+c.y+"][0]"+white[c.x][c.y][0]);
-                
-//                问题分析：这里面的 white[c.x][c.y][0]在中层和内层又重新赋值，层次没有做区分导致最后的0的问题，
-//                层次对权值大小没有影响，只是作为一个标志，以示区分,不同层次的权值也要做大小比较，方便判断
-//				可用0,1,2代表外中内纵向，3,4,5代表横向,并且可行 实现了该点在不同层次不同方向（横、纵）上的权值大小的直观反映
-                
 //       	     2).中层
 				//1、该空点在角上
 				//纵向
@@ -177,9 +155,9 @@ public class To3ComputerAI {
 						}
 						  if(map[c.x][3+i*4]== 0)
 	                            break;
-					   if(map[c.x][3+i*4] == To3Game.WHITE)//白子
+					   if(map[c.x][3+i*4] == To3Game.WHITE)
                         {
-                            counter ++;//跳往第二层
+                            counter ++;
                             break;
                         }
 					}
@@ -192,7 +170,7 @@ public class To3ComputerAI {
 						}
 					    if(map[c.x][11-4*i]== 0)
 	                            break;
-					   if(map[c.x][11-4*i] == To3Game.WHITE)//白子
+					   if(map[c.x][11-4*i] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
@@ -203,15 +181,6 @@ public class To3ComputerAI {
 				//2、该空点在边上 的纵向
 				if(c.x==3 || c.x==11) {
 					if (c.y==7) {
-					/*  if (map[c.x][3] ==To3Game.BLACK || map[c.x][11] ==To3Game.BLACK) {
-							computerValue[0] ++;
-							if (map[c.x][3] ==To3Game.BLACK && map[c.x][11] ==To3Game.BLACK) {
-								computerValue[0] ++;
-							}
-						}else if (map[c.x][3] ==To3Game.WHITE || map[c.x][11] ==To3Game.WHITE) {
-							counter++;
-						}*/
-					  
 						if (map[c.x][3] ==To3Game.BLACK && map[c.x][11] ==To3Game.BLACK) {
 							computerValue[0] ++;
 							computerValue[0] ++;
@@ -226,14 +195,7 @@ public class To3ComputerAI {
 					}
 				}else if (c.x==7) {
 					if (c.y==3 ) {
-					/*  if (map[c.x][1] ==To3Game.BLACK || map[c.x][5] ==To3Game.BLACK) {
-							computerValue[0] ++;
-							if (map[c.x][1] ==To3Game.BLACK && map[c.x][5] ==To3Game.BLACK) {
-								computerValue[0] ++;
-							}
-						}else if (map[c.x][1] ==To3Game.WHITE || map[c.x][5] ==To3Game.WHITE) {
-							counter++;
-						}*/
+				
 						if (map[c.x][1] ==To3Game.BLACK && map[c.x][5] ==To3Game.BLACK) {
 							computerValue[0] ++;
 							computerValue[0] ++;
@@ -247,14 +209,7 @@ public class To3ComputerAI {
 						}
 					}
 					if (c.y==11) {
-					/* 	if (map[c.x][9] ==To3Game.BLACK || map[c.x][13] ==To3Game.BLACK) {
-							computerValue[0] ++;
-							if (map[c.x][9] ==To3Game.BLACK && map[c.x][13] ==To3Game.BLACK) {
-								computerValue[0] ++;
-							}
-						}else if (map[c.x][9] ==To3Game.WHITE || map[c.x][13] ==To3Game.WHITE) {
-							counter++;
-						}*/
+				
 						if (map[c.x][9] ==To3Game.BLACK && map[c.x][13] ==To3Game.BLACK) {
 							computerValue[0] ++;
 							computerValue[0] ++;
@@ -268,15 +223,12 @@ public class To3ComputerAI {
 						}
 					}
 				}
-			    white[c.x][c.y][1] = cpuValue[counter][computerValue[0]]; //赋予cpuValue中的权值
+			    white[c.x][c.y][1] = cpuValue[counter][computerValue[0]]; 
                 computerValue[0] = 0;
                 counter = 0;
 				
 //				Log.d(TAG, "中层纵向：white[+"+c.x+"]["+c.y+"][0]"+white[c.x][c.y][0]);
-//			    测试外层和中层AI
 //			     3).内层
-			     //1、该空点在角上
-			     //2、该空点在边上
 				//内层纵向
 				if ((c.x==5&&c.y==5) || (c.x==9&&c.y==5)) {
 					for (int i = 1; i < 3; i++) {
@@ -285,9 +237,9 @@ public class To3ComputerAI {
 						}
 						  if(map[c.x][5+i*2]== 0)
 	                            break;
-					   if(map[c.x][5+i*2] == To3Game.WHITE)//白子
+					   if(map[c.x][5+i*2] == To3Game.WHITE)
                         {
-                            counter ++;//跳往第二层
+                            counter ++;
                             break;
                         }
 					}
@@ -300,7 +252,7 @@ public class To3ComputerAI {
 						}
 					    if(map[c.x][9-2*i]== 0)
 	                            break;
-					   if(map[c.x][9-2*i] == To3Game.WHITE)//白子
+					   if(map[c.x][9-2*i] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
@@ -311,15 +263,6 @@ public class To3ComputerAI {
 				//2、该空点在边上 的纵向
 				if(c.x==5 || c.x==9) {
 					if (c.y==7) {
-					/* 	if (map[c.x][5] ==To3Game.BLACK || map[c.x][9] ==To3Game.BLACK) { 
-							// 此处两个点都为黑则只computerValue[0] ++一次
-							computerValue[0] ++;
-							if (map[c.x][5] ==To3Game.BLACK && map[c.x][9] ==To3Game.BLACK) {
-								computerValue[0] ++;
-							}
-						}else if (map[c.x][5] ==To3Game.WHITE || map[c.x][9] ==To3Game.WHITE) {
-							counter++;
-						}*/
 						if (map[c.x][5] ==To3Game.BLACK && map[c.x][9] ==To3Game.BLACK) {
 							computerValue[0] ++;
 							computerValue[0] ++;
@@ -340,7 +283,7 @@ public class To3ComputerAI {
 							}
 							if(map[c.x][5-2*i]== 0)
 								break;
-							if(map[c.x][5-2*i] == To3Game.WHITE)//白子
+							if(map[c.x][5-2*i] == To3Game.WHITE)
 							{
 								counter ++;
 								break;
@@ -354,7 +297,7 @@ public class To3ComputerAI {
 							}
 							if(map[c.x][9+2*i]== 0)
 								break;
-							if(map[c.x][9+2*i] == To3Game.WHITE)//白子
+							if(map[c.x][9+2*i] == To3Game.WHITE)
 							{
 								counter ++;
 								break;
@@ -376,7 +319,7 @@ public class To3ComputerAI {
 							}
 							if(map[1+2*i][c.y]== 0)
 								break;
-							if(map[1+2*i][c.y] == To3Game.WHITE)//白子
+							if(map[1+2*i][c.y] == To3Game.WHITE)
 							{
 								counter ++;
 								break;
@@ -389,7 +332,7 @@ public class To3ComputerAI {
 							}
 							if(map[13-2*i][c.y]== 0)
 								break;
-							if(map[13-2*i][c.y] == To3Game.WHITE)//白子
+							if(map[13-2*i][c.y] == To3Game.WHITE)
 							{
 								counter ++;
 								break;
@@ -398,15 +341,6 @@ public class To3ComputerAI {
 					}
 				}else if (c.x==7) {
 					if (c.y==1 || c.y==13) {
-					/*	if (map[1][c.y] ==To3Game.BLACK || map[13][c.y]  ==To3Game.BLACK) {
-							computerValue[1] ++;
-							if (map[1][c.y] ==To3Game.BLACK && map[13][c.y]  ==To3Game.BLACK) {
-								computerValue[1] ++;
-							}
-						}else if (map[1][c.y]  ==To3Game.WHITE || map[13][c.y]  ==To3Game.WHITE) {
-							counter++;
-						}*/
-						
 						if (map[1][c.y] ==To3Game.BLACK && map[13][c.y]  ==To3Game.BLACK) {
 							computerValue[1] ++;
 							computerValue[1] ++;
@@ -429,7 +363,7 @@ public class To3ComputerAI {
 						}
 					   if(map[1+i*6][c.y]== 0)
                             break;
-					   if(map[1+i*6][c.y] == To3Game.WHITE)//白子
+					   if(map[1+i*6][c.y] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
@@ -444,14 +378,14 @@ public class To3ComputerAI {
 						}
 					    if(map[13-6*i][c.y]== 0)
 	                            break;
-					   if(map[13-6*i][c.y] == To3Game.WHITE)//白子
+					   if(map[13-6*i][c.y] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
                         }
 					}
 				}
-				white[c.x][c.y][3] = cpuValue[counter][computerValue[1]]; //赋予cpuValue中的权值
+				white[c.x][c.y][3] = cpuValue[counter][computerValue[1]]; 
                 computerValue[1] = 0;
                 counter = 0;
 //                Log.d(TAG, ".......外层横向：white["+c.x+"]["+c.y+"][1]"+white[c.x][c.y][1]);
@@ -460,14 +394,7 @@ public class To3ComputerAI {
 //            	中层 该空点在边上 的横向
 				if (c.y==7) {
 					if(c.x==3 ) {
-					  /*	if (map[1][c.y] ==To3Game.BLACK || map[5][c.y]  ==To3Game.BLACK) {
-							computerValue[1] ++;
-							if (map[1][c.y] ==To3Game.BLACK && map[5][c.y]  ==To3Game.BLACK) {
-								computerValue[1] ++;
-							}
-						}else if (map[1][c.y] ==To3Game.WHITE || map[5][c.y]  ==To3Game.WHITE) {
-							counter++;
-						}*/
+					
 						if (map[1][c.y] ==To3Game.BLACK && map[5][c.y]  ==To3Game.BLACK) {
 							computerValue[1] ++;
 							computerValue[1] ++;
@@ -480,14 +407,7 @@ public class To3ComputerAI {
 							counter++;
 						}
 					}else if (c.x==11) {
-					/* 	if (map[13][c.y] ==To3Game.BLACK || map[9][c.y]  ==To3Game.BLACK) {
-							computerValue[1] ++;
-							if (map[13][c.y] ==To3Game.BLACK && map[9][c.y]  ==To3Game.BLACK) {
-								computerValue[1] ++;
-							}
-						}else if (map[13][c.y] ==To3Game.WHITE || map[9][c.y]  ==To3Game.WHITE) {
-							counter++;
-						}*/
+				
 						if (map[13][c.y] ==To3Game.BLACK && map[9][c.y]  ==To3Game.BLACK) {
 							computerValue[1] ++;
 							computerValue[1] ++;
@@ -502,14 +422,7 @@ public class To3ComputerAI {
 					}
 				}else if (c.x==7) {
 					if (c.y==3 || c.y==11) {
-					/*  if (map[3][c.y] ==To3Game.BLACK || map[11][c.y]  ==To3Game.BLACK) {
-							computerValue[1] ++;
-							if (map[3][c.y] ==To3Game.BLACK && map[11][c.y]  ==To3Game.BLACK) {
-								computerValue[1] ++;
-							}
-						}else if (map[3][c.y]  ==To3Game.WHITE || map[11][c.y]  ==To3Game.WHITE) {
-							counter++;
-						}*/
+				
 						if (map[3][c.y] ==To3Game.BLACK && map[11][c.y]  ==To3Game.BLACK) {
 							computerValue[1] ++;
 							computerValue[1] ++;
@@ -532,7 +445,7 @@ public class To3ComputerAI {
 						}
 					   if(map[3+i*4][c.y]== 0)
                             break;
-					   if(map[3+i*4][c.y] == To3Game.WHITE)//白子
+					   if(map[3+i*4][c.y] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
@@ -547,14 +460,14 @@ public class To3ComputerAI {
 						}
 					    if(map[11-4*i][c.y]== 0)
 	                            break;
-					   if(map[11-4*i][c.y] == To3Game.WHITE)//白子
+					   if(map[11-4*i][c.y] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
                         }
 					}
 				}
-				white[c.x][c.y][4] = cpuValue[counter][computerValue[1]]; //赋予cpuValue中的权值
+				white[c.x][c.y][4] = cpuValue[counter][computerValue[1]]; 
                 computerValue[1] = 0;
                 counter = 0;
 //                Log.d(TAG, ".......中层横向：white["+c.x+"]["+c.y+"][0]"+white[c.x][c.y][1]);
@@ -569,7 +482,7 @@ public class To3ComputerAI {
 							}
 							if(map[5-2*i][c.y]== 0)
 								break;
-							if(map[5-2*i][c.y] == To3Game.WHITE)//白子
+							if(map[5-2*i][c.y] == To3Game.WHITE)
 							{
 								counter ++;
 								break;
@@ -582,7 +495,7 @@ public class To3ComputerAI {
 							}
 							if(map[9+2*i][c.y]== 0)
 								break;
-							if(map[9+2*i][c.y] == To3Game.WHITE)//白子
+							if(map[9+2*i][c.y] == To3Game.WHITE)
 							{
 								counter ++;
 								break;
@@ -591,14 +504,6 @@ public class To3ComputerAI {
 					}
 				}else if (c.x==7) {
 					if (c.y==5 || c.y==9) {
-					/*	if (map[5][c.y] ==To3Game.BLACK || map[9][c.y]  ==To3Game.BLACK) {
-							computerValue[1] ++;
-							if (map[5][c.y] ==To3Game.BLACK && map[9][c.y]  ==To3Game.BLACK) {
-								computerValue[1] ++;
-							}
-						}else if (map[5][c.y]  ==To3Game.WHITE || map[9][c.y]  ==To3Game.WHITE) {
-							counter++;
-						}*/
 						
 						if (map[5][c.y] ==To3Game.BLACK && map[9][c.y]  ==To3Game.BLACK) {
 							computerValue[1] ++;
@@ -622,7 +527,7 @@ public class To3ComputerAI {
 						}
 					   if(map[5+i*2][c.y]== 0)
                             break;
-					   if(map[5+i*2][c.y] == To3Game.WHITE)//白子
+					   if(map[5+i*2][c.y] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
@@ -637,7 +542,7 @@ public class To3ComputerAI {
 						}
 					    if(map[9-2*i][c.y]== 0)
 	                            break;
-					   if(map[9-2*i][c.y] == To3Game.WHITE)//白子
+					   if(map[9-2*i][c.y] == To3Game.WHITE)
                         {
                             counter ++;
                             break;
@@ -666,9 +571,9 @@ public class To3ComputerAI {
 						}
 						  if(map[c.x][1+i*6]== 0)
 	                            break;
-					   if(map[c.x][1+i*6] == To3Game.BLACK)//白子
+					   if(map[c.x][1+i*6] == To3Game.BLACK)
                         {
-                            counter ++;//跳往第二层
+                            counter ++;
                             break;
                         }
 					}
@@ -681,7 +586,7 @@ public class To3ComputerAI {
 						}
 					    if(map[c.x][13-6*i]== 0)
 	                            break;
-					   if(map[c.x][13-6*i] == To3Game.BLACK)//白子
+					   if(map[c.x][13-6*i] == To3Game.BLACK)
                         {
                             counter ++;
                             break;
@@ -692,18 +597,6 @@ public class To3ComputerAI {
 				//2、该空点在边上 的纵向
 				if(c.x==1 || c.x==13) {
 					if (c.y==7) {
-					/*  这种写法有BUG容易误判
-					 * 	if (map[c.x][1] ==To3Game.WHITE || map[c.x][13] ==To3Game.WHITE) { 
-							// 此处两个点都为黑则只playerValue[0] ++一次
-							playerValue[0] ++;
-							if (map[c.x][1] ==To3Game.WHITE && map[c.x][13] ==To3Game.WHITE) {
-								playerValue[0] ++;
-							}
-						}else if (map[c.x][1] ==To3Game.BLACK || map[c.x][13] ==To3Game.BLACK) {
-							counter++;
-						}*/
-						
-//				每一个的这种地方都要进行针对的更改	 我就不细致去改了>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 						if (map[c.x][1] ==To3Game.WHITE && map[c.x][13] ==To3Game.WHITE) {
 							playerValue[0] ++;
 							playerValue[0] ++;
@@ -725,7 +618,7 @@ public class To3ComputerAI {
 							}
 							if(map[c.x][1+2*i]== 0)
 								break;
-							if(map[c.x][1+2*i] == To3Game.BLACK)//白子
+							if(map[c.x][1+2*i] == To3Game.BLACK)
 							{
 								counter ++;
 								break;
@@ -739,7 +632,7 @@ public class To3ComputerAI {
 							}
 							if(map[c.x][13-2*i]== 0)
 								break;
-							if(map[c.x][13-2*i] == To3Game.BLACK)//白子
+							if(map[c.x][13-2*i] == To3Game.BLACK)
 							{
 								counter ++;
 								break;
@@ -747,7 +640,7 @@ public class To3ComputerAI {
 						}
 					}
 				}
-			    black[c.x][c.y][0] = plaValue[counter][playerValue[0]]; //赋予cpuValue中的权值
+			    black[c.x][c.y][0] = plaValue[counter][playerValue[0]];
 			    playerValue[0] = 0;
                 counter = 0;
 				
@@ -761,7 +654,7 @@ public class To3ComputerAI {
 						}
 						  if(map[c.x][3+i*4]== 0)
 	                            break;
-					   if(map[c.x][3+i*4] == To3Game.BLACK)//白子
+					   if(map[c.x][3+i*4] == To3Game.BLACK)
                         {
                             counter ++;//跳往第二层
                             break;
@@ -776,7 +669,7 @@ public class To3ComputerAI {
 						}
 					    if(map[c.x][11-4*i]== 0)
 	                            break;
-					   if(map[c.x][11-4*i] == To3Game.BLACK)//白子
+					   if(map[c.x][11-4*i] == To3Game.BLACK)
                         {
                             counter ++;
                             break;
@@ -787,15 +680,7 @@ public class To3ComputerAI {
 				//2、该空点在边上 的纵向
 				if(c.x==3 || c.x==11) {
 					if (c.y==7) {
-					/*  if (map[c.x][3] ==To3Game.WHITE || map[c.x][11] ==To3Game.WHITE) {
-							playerValue[0] ++;
-							if (map[c.x][3] ==To3Game.WHITE && map[c.x][11] ==To3Game.WHITE) {
-								playerValue[0] ++;
-							}
-						}else if (map[c.x][3] ==To3Game.BLACK || map[c.x][11] ==To3Game.BLACK) {
-							counter++;
-						}*/
-					  
+					
 						if (map[c.x][3] ==To3Game.WHITE && map[c.x][11] ==To3Game.WHITE) {
 							playerValue[0] ++;
 							playerValue[0] ++;
@@ -810,14 +695,6 @@ public class To3ComputerAI {
 					}
 				}else if (c.x==7) {
 					if (c.y==3 ) {
-					/*  if (map[c.x][1] ==To3Game.WHITE || map[c.x][5] ==To3Game.WHITE) {
-							playerValue[0] ++;
-							if (map[c.x][1] ==To3Game.WHITE && map[c.x][5] ==To3Game.WHITE) {
-								playerValue[0] ++;
-							}
-						}else if (map[c.x][1] ==To3Game.BLACK || map[c.x][5] ==To3Game.BLACK) {
-							counter++;
-						}*/
 					  
 						if (map[c.x][1] ==To3Game.WHITE && map[c.x][5] ==To3Game.WHITE) {
 							playerValue[0] ++;
@@ -832,15 +709,6 @@ public class To3ComputerAI {
 						}
 					}
 					if (c.y==11) {
-					/*  if (map[c.x][9] ==To3Game.WHITE || map[c.x][13] ==To3Game.WHITE) {
-							playerValue[0] ++;
-							if (map[c.x][9] ==To3Game.WHITE && map[c.x][13] ==To3Game.WHITE) {
-								playerValue[0] ++;
-							}
-						}else if (map[c.x][9] ==To3Game.BLACK || map[c.x][13] ==To3Game.BLACK) {
-							counter++;
-						}*/
-					  
 						if (map[c.x][9] ==To3Game.WHITE && map[c.x][13] ==To3Game.WHITE) {
 							playerValue[0] ++;
 							playerValue[0] ++;
@@ -860,8 +728,6 @@ public class To3ComputerAI {
 				
 //			    测试外层和中层AI
 //			     3).内层
-			     //1、该空点在角上
-			     //2、该空点在边上
 				//内层纵向
 				if ((c.x==5&&c.y==5) || (c.x==9&&c.y==5)) {
 					for (int i = 1; i < 3; i++) {
@@ -870,9 +736,9 @@ public class To3ComputerAI {
 						}
 						  if(map[c.x][5+i*2]== 0)
 	                            break;
-					   if(map[c.x][5+i*2] == To3Game.BLACK)//白子
+					   if(map[c.x][5+i*2] == To3Game.BLACK)
                         {
-                            counter ++;//跳往第二层
+                            counter ++;
                             break;
                         }
 					}
@@ -896,15 +762,6 @@ public class To3ComputerAI {
 				//2、该空点在边上 的纵向
 				if(c.x==5 || c.x==9) {
 					if (c.y==7) {
-					/*	if (map[c.x][5] ==To3Game.WHITE || map[c.x][9] ==To3Game.WHITE) { 
-							// 此处两个点都为黑则只playerValue[0] ++一次
-							playerValue[0] ++;
-							if (map[c.x][5] ==To3Game.WHITE && map[c.x][9] ==To3Game.WHITE) {
-								playerValue[0] ++;
-							}
-						}else if (map[c.x][5] ==To3Game.BLACK || map[c.x][9] ==To3Game.BLACK) {
-							counter++;
-						}*/
 						
 						if (map[c.x][5] ==To3Game.WHITE && map[c.x][9] ==To3Game.WHITE) {
 							playerValue[0] ++;
@@ -948,7 +805,7 @@ public class To3ComputerAI {
 						}
 					}
 				}
-			    black[c.x][c.y][2] = plaValue[counter][playerValue[0]]; //赋予cpuValue中的权值
+			    black[c.x][c.y][2] = plaValue[counter][playerValue[0]]; 
                 playerValue[0] = 0;
                 counter = 0;
 //				Log.d(TAG, "内层纵向：white[+"+c.x+"]["+c.y+"][0]"+white[c.x][c.y][0]);
@@ -962,7 +819,7 @@ public class To3ComputerAI {
 							}
 							if(map[1+2*i][c.y]== 0)
 								break;
-							if(map[1+2*i][c.y] == To3Game.BLACK)//白子
+							if(map[1+2*i][c.y] == To3Game.BLACK)
 							{
 								counter ++;
 								break;
@@ -975,7 +832,7 @@ public class To3ComputerAI {
 							}
 							if(map[13-2*i][c.y]== 0)
 								break;
-							if(map[13-2*i][c.y] == To3Game.BLACK)//白子
+							if(map[13-2*i][c.y] == To3Game.BLACK)
 							{
 								counter ++;
 								break;
@@ -984,14 +841,6 @@ public class To3ComputerAI {
 					}
 				}else if (c.x==7) {
 					if (c.y==1 || c.y==13) {
-				  /*	if (map[1][c.y] ==To3Game.WHITE || map[13][c.y]  ==To3Game.WHITE) {
-							playerValue[1] ++;
-							if (map[1][c.y] ==To3Game.WHITE && map[13][c.y]  ==To3Game.WHITE) {
-								playerValue[1] ++;
-							}
-						}else if (map[1][c.y]  ==To3Game.BLACK || map[13][c.y]  ==To3Game.BLACK) {
-							counter++;
-						}*/
 						
 						if (map[1][c.y] ==To3Game.WHITE && map[13][c.y]  ==To3Game.WHITE) {
 							playerValue[1] ++;
@@ -1016,7 +865,7 @@ public class To3ComputerAI {
 						}
 					   if(map[1+i*6][c.y]== 0)
                             break;
-					   if(map[1+i*6][c.y] == To3Game.BLACK)//白子
+					   if(map[1+i*6][c.y] == To3Game.BLACK)
                         {
                             counter ++;
                             break;
@@ -1031,14 +880,14 @@ public class To3ComputerAI {
 						}
 					    if(map[13-6*i][c.y]== 0)
 	                            break;
-					   if(map[13-6*i][c.y] == To3Game.BLACK)//白子
+					   if(map[13-6*i][c.y] == To3Game.BLACK)
                         {
                             counter ++;
                             break;
                         }
 					}
 				}
-				black[c.x][c.y][3] = plaValue[counter][playerValue[1]]; //赋予cpuValue中的权值
+				black[c.x][c.y][3] = plaValue[counter][playerValue[1]];
 				playerValue[1] = 0;
                 counter = 0;
 //                Log.d(TAG, ".......外层横向：white["+c.x+"]["+c.y+"][0]"+white[c.x][c.y][1]);
@@ -1047,14 +896,6 @@ public class To3ComputerAI {
 //            	中层 该空点在边上 的横向
 				if (c.y==7) {
 					if(c.x==3 ) {
-						/*if (map[1][c.y] ==To3Game.WHITE || map[5][c.y]  ==To3Game.WHITE) {
-							playerValue[1] ++;
-							if (map[1][c.y] ==To3Game.WHITE && map[5][c.y]  ==To3Game.WHITE) {
-								playerValue[1] ++;
-							}
-						}else if (map[1][c.y] ==To3Game.BLACK || map[5][c.y]  ==To3Game.BLACK) {
-							counter++;
-						}*/
 						if (map[1][c.y] ==To3Game.WHITE && map[5][c.y]  ==To3Game.WHITE) {
 							playerValue[1] ++;
 							playerValue[1] ++;
@@ -1067,14 +908,6 @@ public class To3ComputerAI {
 							counter++;
 						}
 					}else if (c.x==11) {
-					/*	if (map[13][c.y] ==To3Game.WHITE || map[9][c.y]  ==To3Game.WHITE) {
-							playerValue[1] ++;
-							if (map[13][c.y] ==To3Game.WHITE && map[9][c.y]  ==To3Game.WHITE) {
-								playerValue[1] ++;
-							}
-						}else if (map[13][c.y] ==To3Game.BLACK || map[9][c.y]  ==To3Game.BLACK) {
-							counter++;
-						}*/
 						if (map[13][c.y] ==To3Game.WHITE && map[9][c.y]  ==To3Game.WHITE) {
 							playerValue[1] ++;
 							playerValue[1] ++;
@@ -1089,14 +922,6 @@ public class To3ComputerAI {
 					}
 				}else if (c.x==7) {
 					if (c.y==3 || c.y==11) {
-					/*	if (map[3][c.y] ==To3Game.WHITE || map[11][c.y]  ==To3Game.WHITE) {
-							playerValue[1] ++;
-							if (map[3][c.y] ==To3Game.WHITE && map[11][c.y]  ==To3Game.WHITE) {
-								playerValue[1] ++;
-							}
-						}else if (map[3][c.y]  ==To3Game.BLACK || map[11][c.y]  ==To3Game.BLACK) {
-							counter++;
-						}*/
 						if (map[3][c.y] ==To3Game.WHITE && map[11][c.y]  ==To3Game.WHITE) {
 							playerValue[1] ++;
 							playerValue[1] ++;
@@ -1119,7 +944,7 @@ public class To3ComputerAI {
 						}
 					   if(map[3+i*4][c.y]== 0)
                             break;
-					   if(map[3+i*4][c.y] == To3Game.BLACK)//白子
+					   if(map[3+i*4][c.y] == To3Game.BLACK)
                         {
                             counter ++;
                             break;
@@ -1134,14 +959,14 @@ public class To3ComputerAI {
 						}
 					    if(map[11-4*i][c.y]== 0)
 	                            break;
-					   if(map[11-4*i][c.y] == To3Game.BLACK)//白子
+					   if(map[11-4*i][c.y] == To3Game.BLACK)
                         {
                             counter ++;
                             break;
                         }
 					}
 				}
-				black[c.x][c.y][4] = plaValue[counter][playerValue[1]]; //赋予cpuValue中的权值
+				black[c.x][c.y][4] = plaValue[counter][playerValue[1]]; 
 				playerValue[1] = 0;
                 counter = 0;
 //                Log.d(TAG, ".......中层横向：white["+c.x+"]["+c.y+"][0]"+white[c.x][c.y][1]);
@@ -1177,14 +1002,6 @@ public class To3ComputerAI {
 					}
 				}else if (c.x==7) {
 					if (c.y==5 || c.y==9) {
-					/*	if (map[5][c.y] ==To3Game.WHITE || map[9][c.y]  ==To3Game.WHITE) {
-							playerValue[1] ++;
-							if (map[5][c.y] ==To3Game.WHITE && map[9][c.y]  ==To3Game.WHITE) {
-								playerValue[1] ++;
-							}
-						}else if (map[5][c.y]  ==To3Game.BLACK || map[9][c.y]  ==To3Game.BLACK) {
-							counter++;
-						}*/
 						if (map[5][c.y] ==To3Game.WHITE && map[9][c.y]  ==To3Game.WHITE) {
 							playerValue[1] ++;
 							playerValue[1] ++;
@@ -1222,14 +1039,14 @@ public class To3ComputerAI {
 						}
 					    if(map[9-2*i][c.y]== 0)
 	                            break;
-					   if(map[9-2*i][c.y] == To3Game.BLACK)//白子
+					   if(map[9-2*i][c.y] == To3Game.BLACK)
                         {
                             counter ++;
                             break;
                         }
 					}
 				}
-				black[c.x][c.y][5] = plaValue[counter][playerValue[1]]; //赋予cpuValue中的权值
+				black[c.x][c.y][5] = plaValue[counter][playerValue[1]]; 
 				playerValue[1] = 0;
                 counter = 0;
 			}
@@ -1237,10 +1054,9 @@ public class To3ComputerAI {
 	}
 	
 	/**
-	 * 
 	 * @param map
 	 * @return point
-	 * @description 落子点坐标   问题分析： 我做的电脑AI目前太蠢了，还有很多改进的空间
+	 * @description 落子点坐标   问题分析： 我做的电脑AI目前太蠢了，还有很多改进的空间，，
 	 */
 	public Coordinate getPosition(int[][] map) {
 	        int blackRow = 0; 
@@ -1273,10 +1089,8 @@ public class To3ComputerAI {
 						}
 					}
 
-//					为什么这里的值都是0? 是上面的updateValue权值分析方法没有做好?之所以出现这样的情况应该是外层之后到中层
-//					内层又重新赋值了0了
 //					Log.d(TAG, ">>>>>>>>>>>>>>>>>>>>>白棋权值：white["+c.x+"]["+c.y+"]["+k+"]"+white[c.x][c.y][k]);
-					if (white[c.x][c.y][k] > maxcValue) { //这里面写成maxpValue导致的错误
+					if (white[c.x][c.y][k] > maxcValue) { 
 						whiteRow = c.x;
 						whiteCollum = c.y;
 						maxcValue = white[c.x][c.y][k];
@@ -1309,11 +1123,6 @@ public class To3ComputerAI {
 	 * 电脑成三吃子
 	 */
 	public Coordinate eatChess(int[][] map) {
-//		判断对方有无两子连续  这里为优先级为最高，因为己方吃完就到对方手
-//		有，吃其中一子
-//		3、无，则任意吃非对方成三的子
-		//1、有己方两子凉连续     吃堵住了己方三的对方子
-//		2、无，则 吃堵住己方已经成三的子
 		
 //		首先应该找出是否有成二的点
 		Coordinate co =null;
@@ -1351,8 +1160,7 @@ public class To3ComputerAI {
 		this.game =game;
 		int[][] map=game.getChessMap();
 		//1、分析棋盘的权值（白 /黑）判断进攻还是防守
-		//  找到最大权值得点   
-//				找到距离该点最近的路线进行子力移动
+		
 		 int blackRow = 0; 
 	     int blackCollum = 0;
 	     int whiteRow = 0; 
@@ -1361,17 +1169,14 @@ public class To3ComputerAI {
 	     int maxcValue = -10;
 	     int maxpSum = 0;
 	     int maxcSum = 0;
-//		接下来就是电脑的移动问题了
+	     
 		findWays(game, map);
-//		白子走的是whiteWays中的线路
-//		黑子走的是blackWays中的线路
-//		要分析判断它们每一个路线的每一个维度的得分
-		updateValue(game);//更新地图权值
+		
+		updateValue(game);
 //		这些end点里相对于白子、黑子方的判断，权值不同
 //		白子走当前一步最好的点是，当前白子可走路线中，end点中权值最高的点 maxWhite
 //		要在地图中除去该最好线路中开始点的子，即置为0，判断结束点权值大小， 因为是根据对方棋子分布判断所以这样没什么意义
-//		否则       
-		for (To3ChessWay way : whiteWays) {//		找白子最大权值点
+		for (To3ChessWay way : whiteWays) {
 			Coordinate c =way.end;
 			for (int k = 0; k < 6; k++) {
 				if (white[c.x][c.y][k] > maxcValue) { 
@@ -1413,64 +1218,12 @@ public class To3ComputerAI {
 //			包含，则白子应选择end点为终点,不在，则
 		  Log.d(TAG, "whiteWays"+whiteWays.size()+"maxcValue :"+maxcValue+"White["+whiteRow+"]["+whiteCollum+"]" +"\n>>"+"blackWays"+blackWays.size()+"maxpValue:"+maxpValue+"Black["+blackRow+"]["+blackCollum+"]");
 		if (maxcValue >maxpValue) {
-			//白子的防守 判断该点周围是否有白子的路
 			if (!isWaysContances(whiteRow,whiteCollum)){
 				whiteChessMove(blackRow, blackCollum);
 			}
 		}else  {
-			//包含，阻止黑子想要到往的路
 			whiteChessMove(blackRow, blackCollum);
 		}
-//		电脑还是有点二
-		
-//		遍历所有的路线，找到权值最大的路线，点连成线，有利于最快到达权值最大的点的线路 权线值最大
-//		1、先找到最大的权值点
-		/*	updateValue(map);
-			Coordinate maxPoint = getPosition(map);
-			Coordinate maxWhite =new Coordinate(whiteRow, whiteCollum);
-			Coordinate maxBlack =new Coordinate(blackRow, blackCollum);
-//			拿白子最大权值点
-//			拿黑子最大权值点
-			
-//		   2、找到能最快到达的线路            
-//		如果对方到达最大权值的线路短于己方，则防守           
-//			同等级的最大权值点出现时，以线路短作为进攻防守的依据（）
-//			模拟几步白子黑子棋子移动后，棋局的整体变化
-//				每移动一步就要updateValue(map);
-//			1、先把目标放在当前能走的最好的一步路上；每走一步都有一个评分的，只有最终得分高的走法电脑才会选择
-			if(maxcValue > maxpValue){   //防守 ，白行白列，白方的防守，相对应于白方则为防守
-				
-			}else {
-			在这里面的思路有问题：故舍弃！
-			 //进攻  黑行黑列，黑方的防守，相对应于白方则为进攻
-				//maxWhite就是目标点，与之相关的有三条线路，怎么筛选？？
-				for (To3ChessWay way : whiteWays) {
-//						该权值最大的点周围有 己方子力 则way 能拿到值 (这里权值最大的点周围是有白子的，问题的
-//					关键是：存不存在有权值最大点周围没有白子的情况)
-					if (way.end.x==blackRow && way.end.y==blackCollum)
-					{
-						//循环每遍历一次，到这里面的线路就有至少两条
-						if (game.clearChess(way.start)) {
-							//假设该点移动一步，判断是否成三
-							if (game.isThree(way.end.x, way.end.y, way.start.type)) {
-								//记录该路线，即为所求
-								this.way =way;
-								break;
-							}else { //不成三,则还原该点，还是记录way
-								//到这里是模拟走了一步  且是走的目标是当前棋局的最大权值点
-								game.restoreChess(way.start);
-//								this.way =way;
-							}
-						}
-					}
-					
-				}
-			}
-			
-		if (way ==null) {
-//			无路可走了，我输了
-  			way =whiteWays.get(new Random().nextInt(whiteWays.size()));
-		}*/
 		return way.start;
 	}
 
@@ -1514,7 +1267,6 @@ public class To3ComputerAI {
 					//假设该点移动一步，判断是否成三
 					game.setChess(way.end, game.WHITE);
 					if (game.isThree(way.end.x, way.end.y, way.start.type)) {
-//						成三线路没有执行不知道为什么？
 						//记录该路线，即为所求
 						this.way =way;
 						chessRestore(way);
@@ -1542,7 +1294,6 @@ public class To3ComputerAI {
 	}
 
 	private void findWays(To3Game game, int[][] map) {
-		//		还是博弈论 最终结果还是开发者智力的提现
 //		1、根据对黑子力分布，更新白方权值，分析白方可移动的子力
 //		为每一个可移动路线做评估，分析可移动的白子，每个白子周围空点位数，对应的就是路线数
 //		目标：分析判断出最优路线（其结果是：有利于更快到达权值最大的点）
@@ -1553,20 +1304,6 @@ public class To3ComputerAI {
 				c.type =map[c.x][c.y];
 //				该白子周围空点位有：
 //				获取该点附近的点
-				
-			/*	方式一：麻烦，优点，可节省cup性能
-			 * List<Coordinate> npList = getNearByPoint(c);
-				for (Coordinate co : npList) {
-					//在地图上为空的点
-					if (map[co.x][co.y] ==0) {
-//						存在，则c可作为起始点，co可作为结束点，它们可构成一条路线
-//						这里面只能拿到最后遍历的路线，作为起止点
-//						要做模拟几步棋子移动后的情况分析，才可了解哪一个路线为当前最优选择
-						chessWays.add(new To3ChessWay(c, co));
-					}
-				}*/
-				
-				// 方式二：稍微消耗点cpu性能
 				for (Coordinate co : gamePoints) {
 					if (map[co.x][co.y] ==0) {
 						if(game.isNearBy(c,co) || game.exChangePoint(c,co)) {

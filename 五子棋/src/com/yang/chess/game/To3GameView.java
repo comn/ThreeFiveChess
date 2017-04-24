@@ -24,7 +24,8 @@ import com.yang.chess.R;
 
 /**
  * 负责游戏的显示，游戏的逻辑判断在Game.java中
- * @author cuiqing
+ * @author flsolate
+ * @description
  */
 public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
 
@@ -32,7 +33,6 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
     private static final boolean DEBUG = true;
     public static boolean isTo3 =false;
     
-    // 定义SurfaceHolder对象
     SurfaceHolder mHolder = null;
     
     // 棋子画笔
@@ -96,7 +96,7 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
         // 设置透明
         mHolder.setFormat(PixelFormat.TRANSLUCENT);
         setZOrderOnTop(true);
-//        true to set the antialias bit in the flags, false to clear it 抗锯齿
+//        true to set the antialias bit in the flags, false to clear it
         chessPaint.setAntiAlias(true);
         boardPaint.setStrokeWidth(boardWidth);
         boardPaint.setColor(boardColor);
@@ -138,7 +138,7 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
     public void chessMove(Coordinate start, Coordinate end, boolean isTouchMove) {
     	int type = mGame.getChessMap()[start.x][start.y];
     	
-    	if (mGame.getActive()!=type) {//非己手己子则不可移动
+    	if (mGame.getActive()!=type) {
 			return;
 		}
     	
@@ -147,7 +147,6 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
     	if (clearChess) {
     		mGame.clearedActions.add(new Coordinate(start.x, start.y, type));
     		if (isTouchMove) {
-//    			在蓝牙模式中要把start点和结束点发送给对方
     			if (mGame.getMode()==GameConstants.MODE_BLUETOOTH) {
     				mGame.sendMoveStart(start);
     			}
@@ -207,7 +206,7 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
         width = View.MeasureSpec.getSize(widthMeasureSpec);
         Log.d(TAG, "width="+width);
         if(mGame != null){
-            if (width % mGame.getWidth() == 0){//宽度能被棋盘宽度整除
+            if (width % mGame.getWidth() == 0){
             	
             } else {
                 width = width / mGame.getWidth() * mGame.getWidth();
@@ -215,8 +214,8 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
             
             float scale = ((float)mGame.getHeight()) / mGame.getWidth();
             height = (int) (width*scale);
-            setMeasuredDimension(width, height);//确定GameView最终宽高
-            Log.d(TAG, "width="+width+"  height="+height);//645,645
+            setMeasuredDimension(width, height);
+            Log.d(TAG, "width="+width+"  height="+height);
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
@@ -231,7 +230,7 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
         if (mGame != null) {
             mChessboardWidth = mGame.getWidth();
             mChessboardHeight = mGame.getHeight();
-            mChessSize = (right - left) / mChessboardWidth;//棋子大小43
+            mChessSize = (right - left) / mChessboardWidth;
             Log.d(TAG, "mChessSize=" + mChessSize + " mChessboardWidth="
                     + mChessboardWidth + " mChessboardHeight"
                     + mChessboardHeight);
@@ -285,9 +284,9 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
         float y = event.getY();
         switch (action) {
         case MotionEvent.ACTION_DOWN:
-            focus.x = (int) (x/mChessSize);//强转之后丢失半个棋子的精度，正好为GameMap点位
+            focus.x = (int) (x/mChessSize);
             focus.y = (int) (y/mChessSize);
-            Log.d(TAG, "x/mChessSize :"+x/mChessSize);//1.534...为一个半棋子长度
+            Log.d(TAG, "x/mChessSize :"+x/mChessSize);
             isCanTouchUp=true;
             
             if (mGame == null){
@@ -305,8 +304,6 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
             	if(mGame.getMode() ==GameConstants.MODE_FIGHT){
             		handleChessMove(type);
             	}else if (mGame.getMode() ==GameConstants.MODE_SINGLE) {
-//            		成三吃子后的这段代码没有执行 ，原因：
-//            			成三吃子之后点的是白子，所以start.type == mGame.challenger.type
 					if (start.type != mGame.challenger.type) 
 //					{
 //						Toast.makeText(mContext, "棋子移动了", 0).show();
@@ -319,9 +316,7 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
 				eatChessCallBack.eatChess(focus.x,focus.y,type);
 			}
             
-            //按下后该点具有焦点
 		    isDrawFocus = true;
-		    //抬起有效果
             drawGame();
             break;
         case MotionEvent.ACTION_MOVE:
@@ -352,7 +347,6 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
 			end.x=focus.x;
 			end.y=focus.y;
 			end.type =type;
-			//判断结束点是否在开始点的旁边一个位置 是：可移动 否：不可移动
 			if(mGame.isNearBy(start,end) || mGame.exChangePoint(start,end)){
 				chessMove(start, end);
 			}
@@ -399,12 +393,12 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
     
     // 画棋盘背景
     private void drawChessBoard(){
-        Canvas canvas = mHolder.lockCanvas();//拿到画布
+        Canvas canvas = mHolder.lockCanvas();
         if (mHolder == null || canvas == null) {
             return;
         }
         drawChessBoard(canvas);
-        mHolder.unlockCanvasAndPost(canvas);//解锁更新
+        mHolder.unlockCanvasAndPost(canvas);
     }
     
     // 画棋盘背景
@@ -457,7 +451,7 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
         int[][] chessMap = mGame.getChessMap();
         //遍历棋盘，画所有已落的棋子。
         for (int x = 0; x < chessMap.length; ++x){
-            for (int y = 0; y < chessMap[0].length; ++y){//x=0的一维数组长度
+            for (int y = 0; y < chessMap[0].length; ++y){
                 int type = chessMap[x][y];
                 if (type == Game.BLACK){
                     canvas.drawBitmap(mBlack, x*mChessSize, y*mChessSize, chessPaint);
@@ -504,7 +498,6 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
             mBlack.recycle();
         }
         if (mWhite != null){
-        	//当前白子Bitmap没有被销毁则循环利用
             mWhite.recycle();
         }
         mBlack = createChess(width, height, 0);
@@ -546,15 +539,10 @@ public class To3GameView extends SurfaceView implements SurfaceHolder.Callback{
 					if (clearChess && !mGame.isGameEnd(x, y, player)) {
 						//吃子成功后不可再吃
 						eatChessCallBack=null;
-						//可添加子
 						mGame.setAddChess(true);
-						//设置抬起不能添加子
 						isCanTouchUp  =false;
-						//换手
 						mGame.sendChangeActive();
-						//添加进已吃的子的集合
 						mGame.eatedActions.add(new Coordinate(x, y, type));
-						//发送吃子点位
 						mGame.sendEatChess(x, player, type);
 					}
 				}

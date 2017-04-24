@@ -68,7 +68,7 @@ public class ConnectionActivity extends Activity implements OnClickListener
         public void handleMessage(Message msg) {
             Log.d(TAG, "refresh action="+ msg.what);
             switch (msg.what) {
-            case ON_JOIN: //添加消息，mConnections中添加设备。
+            case ON_JOIN: 
                 ConnectionItem add = getConnectItem(msg);
                 if (!mConnections.contains(add)) {
                     mConnections.add(add);
@@ -82,7 +82,7 @@ public class ConnectionActivity extends Activity implements OnClickListener
                     mAdapter.changeData(mConnections);
                 }
                 break;
-            case CONNECT_ASK://被请求连接,则自己是TCP的服务端
+            case CONNECT_ASK:
                 ConnectionItem ask = getConnectItem(msg);
                 showConnectDialog(ask.name, ask.ip);
                 break;
@@ -95,12 +95,11 @@ public class ConnectionActivity extends Activity implements OnClickListener
                 mChats.add(cc);
                 showChatDialog();
                 break;
-            case CONNECT_AGREE://对方已同意开始游戏，请求连接则自己是TCP客户端。
+            case CONNECT_AGREE:
                 if (waitDialog != null && waitDialog.isShowing()) {
                     waitDialog.dismiss();
                 }
                 String ip = msg.peekData().getString("ip");
-                //主动请求被同意，则自己为客户端
                 startGameActivity(false, ip);
                 break;
             case CONNECT_REJECT:
@@ -167,7 +166,6 @@ public class ConnectionActivity extends Activity implements OnClickListener
     @Override
     protected void onStart() {
         super.onStart();
-        //在onResume()方法之前onCreate()方法后调用。
         mCM = new ConnnectingService(mIP, mHandler);
         mCM.start();
         mCM.sendScanMsg();
@@ -212,16 +210,13 @@ public class ConnectionActivity extends Activity implements OnClickListener
             return null;
         }
         WifiInfo wi = wm.getConnectionInfo();
-        //获取32位整型IP地址  
         int ipAdd = wi.getIpAddress();
-        //把整型地址转换成“*.*.*.*”地址  
         String ip=intToIp(ipAdd);
         Log.d(TAG, "ip:"+ip);
         return ip;
     }
     
     private String intToIp(int i) {
-//    	i & 0xFF取最后的8位的数字。
         return (i & 0xFF ) + "." +
         ((i >> 8 ) & 0xFF) + "." +
         ((i >> 16 ) & 0xFF) + "." +
@@ -262,7 +257,6 @@ public class ConnectionActivity extends Activity implements OnClickListener
                 switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     mCM.accept(ip);
-                    //接受对方联机请求，则自己为服务端
                     startGameActivity(true, ip);
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:

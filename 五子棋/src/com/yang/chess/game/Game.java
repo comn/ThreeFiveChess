@@ -7,16 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 
 /**
- *   五子棋规则：
-	1．执黑先行，白棋后行，第一颗子必须落在天元上，依次轮流落子，白棋第一手应在天元为界自己一侧布子，之后双方可任意行子。
-	2．最先在棋盘横向、竖向、斜向形成连续的相同色五个棋子的一方为胜。
-	3．黑棋禁手判负、白棋无禁手。黑棋禁手包括“三、三” “四、四” “长连”。黑方只能“四、三”胜。 
-	4．如分不出胜负，则定为平局。
-	5．对局中掉子（棋子掉落在棋盘上）的一方判负。如遇推子或蹭子，以盘面第一落点为准。用手将棋子扶正不算违规。
-	6．对局中拔子、中途退场均判为负。
-	7．五连与禁手同时形成，先五为胜。
-	8．黑方禁手形成时，白方应立即指出。若白方发现而续应子，不能判黑方负。
-	
  * @author Flsolate
  * @date 2016-9-15
  * @description  处理游戏逻辑
@@ -37,11 +27,11 @@ public class Game {
     int mGameWidth = 0;
     int mGameHeight = 0;
     int[][] mGameMap = null;
-    Deque<Coordinate> mActions ;//管理已落的棋子
+    Deque<Coordinate> mActions ;
     
     public static final int BLACK = 1;
     public static final int WHITE = 2;
-    // 默认黑子先出
+    // 默认黑子先
     private int mActive = 1;
     private boolean isFirstChess =false;
     
@@ -122,7 +112,7 @@ public class Game {
     }
     
     /**
-     * 落子，在GameView中调用，用于玩家点击添加棋子。
+     * 落子
      * @param x 横向下标
      * @param y 纵向下标
      * @return 当前位置是否可以下子，mGameMap[x][y] == 0则无子，1则为黑，2则为白。
@@ -130,7 +120,6 @@ public class Game {
     public boolean addChess(int x, int y){
     	
         if (mMode == GameConstants.MODE_FIGHT){
-        	//地图上该点为空。则添子。
             if(mGameMap[x][y] == 0){
                 if (mActive == BLACK){
                     mGameMap[x][y] = BLACK;

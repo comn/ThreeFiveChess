@@ -16,7 +16,12 @@ import com.yang.chess.bluetooth.BluetoothConstants;
 import com.yang.chess.game.Coordinate;
 import com.yang.chess.game.Game;
 import com.yang.chess.game.GameConstants;
-
+/**
+ * 
+ * @author Flsolate
+ * @date 2017-1-18
+ * @description  成三棋的蓝牙模块
+ */
 public class BluetoothGameActivity extends BaseActivity {
 	private static final String TAG = "BluetoothGameActivity";
 	
@@ -46,7 +51,6 @@ public class BluetoothGameActivity extends BaseActivity {
 				updatePlayerChess(me, challenger);
 				updateActive(mGame);
 				Toast.makeText(BluetoothGameActivity.this, "我已下子了，该你了！", 0).show();
-				// 发送给联机玩家
 				sendChess(co.x, co.y, BluetoothConstants.CHALLENGER_ADD_CHESS);
 				break;
 			case GameConstants.THREE_CHESS: 
@@ -58,10 +62,9 @@ public class BluetoothGameActivity extends BaseActivity {
 					mGameView.eatChess(Game.BLACK);
 				}
 				break;
-			case GameConstants.CHANGE_ACTIVE:// 换手
+			case GameConstants.CHANGE_ACTIVE:
 				updateActive(mGame);
 				break;
-			// 将自己成三吃的对方子点位传给对方
 			case GameConstants.EAT_CHESS:
 				Coordinate eat = (Coordinate) msg.obj;
 				sendChess(eat.x, eat.y, BluetoothConstants.CHALLENGER_EAT_CHESS);
@@ -86,14 +89,16 @@ public class BluetoothGameActivity extends BaseActivity {
 			case BluetoothConstants.MESSAGE_STATE_CHANGE:
 				switch (msg.arg1) {
 				case BluetoothChatService.STATE_CONNECTED:
-					setStatus(this,"已联机");
+					setStatus(this,getResources().getString(R.string.state_connected));
 					break;
 				case BluetoothChatService.STATE_CONNECTING:
-					setStatus(this,"正在联机..");
+					setStatus(this,getResources().getString(R.string.state_connecting));
 					break;
-				case BluetoothChatService.STATE_LISTEN: //开始状态
-				case BluetoothChatService.STATE_NONE: //停止状态
-					setStatus(this,"未联机");
+				case BluetoothChatService.STATE_LISTEN: 
+					setStatus(this,getResources().getString(R.string.state_listen));
+					break;
+				case BluetoothChatService.STATE_NONE: 
+					setStatus(this,getResources().getString(R.string.state_none));
 					break;
 				}
 				break;
@@ -106,14 +111,12 @@ public class BluetoothGameActivity extends BaseActivity {
 						"Connected to " + mConnectedDeviceName,
 						Toast.LENGTH_SHORT).show();
 				break;
-			case BluetoothConstants.CHALLENGER_ADD_CHESS://对方发来的添加棋子的信号
+			case BluetoothConstants.CHALLENGER_ADD_CHESS:
 				byte[] receive = (byte[]) msg.obj;
 				mGame.addChess(receive[2], receive[3], challenger);
 				mGameView.drawGame();
 	            updateActive(mGame);
-//				这里面要做区分了，是不是动子阶段的子力移动的添加
 				if (me.getmChesses()==0 && challenger.getmChesses()==0) {
-					//记录动子阶段对方移动的结束点  直接跳出循环不必执行落子阶段的代码
 					break;
 				}
 				challenger.downChess();
@@ -129,8 +132,7 @@ public class BluetoothGameActivity extends BaseActivity {
 					mGame.sendChangeActive();
 				}
 				break;
-			case BluetoothConstants.CHALLENGER_CHESS_MOVE://处理对方的棋子移动
-				//这里面拿到的是移动的开始点即要清除的点，结束点在CHALLENGER_ADD_CHESS中包含
+			case BluetoothConstants.CHALLENGER_CHESS_MOVE:
 				byte[] s = (byte[]) msg.obj;
 				Coordinate start = new Coordinate(s[2], s[3], challenger.type);
 				if(mGame.clearChess(start)){
@@ -138,16 +140,15 @@ public class BluetoothGameActivity extends BaseActivity {
 				}
 				break;
 				
-				
 			default:
 				break;
 			}
 		}
 	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		初始化蓝牙设备，进行消息的接发
 		initBluetooth();
 	}
 
@@ -161,7 +162,7 @@ public class BluetoothGameActivity extends BaseActivity {
 			finish();
 			return;
 		}
-		if (!mBluetoothAdapter.isEnabled()) {// 没打开，则开启
+		if (!mBluetoothAdapter.isEnabled()) {
 			Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(intent, REQUEST_ENABLE_BT);
 		} else {
@@ -181,7 +182,6 @@ public class BluetoothGameActivity extends BaseActivity {
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_SECURE:
-			// 点击列表设备时，执行以下方法
 			if (resultCode == Activity.RESULT_OK) {
 				connectDevice(data, true);
 			}
@@ -225,7 +225,7 @@ public class BluetoothGameActivity extends BaseActivity {
 		if(mChatService==null)return;
 		// Check that we're actually connected before trying anything
 		if (mChatService !=null && (mChatService.getState() != BluetoothChatService.STATE_CONNECTED)) {
-			Toast.makeText(this, "未联机", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "联机异常", Toast.LENGTH_SHORT).show();
 			return;
 		}
 

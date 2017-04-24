@@ -16,12 +16,10 @@ public class NetWorkUtil {
 
 	/**
 	 * 检查网络
-	 * 
 	 * @param context
 	 * @return
 	 */
 	public static boolean checkNetWork(Context context) {
-		// ConnectivityManager--系统服务
 		// ①判断WIFI链接吗
 		isWIFI = isWIFIConnectivity(context);
 		// ②判断MOBILE链接吗
@@ -32,12 +30,8 @@ public class NetWorkUtil {
 			return false;
 		}
 
-		// ③如果MOBILE处于链接状态：WAP NET
-		// 如果WAP——代理信息
-		// 获取到当前正在处理链接的方式——读取链接的配置参数
-		// 如果读取到proxy+port---非空wap
 		if (isMOBILE) {
-			readAPN(context);// 操作联系人
+			readAPN(context);
 		}
 
 		return true;
@@ -81,7 +75,6 @@ public class NetWorkUtil {
 	 */
 	private static boolean isMOBILEConnectivity(Context context) {
 		ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		// MOBILE链接的描述信息
 		NetworkInfo networkInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 		if (networkInfo != null) {
 			return networkInfo.isConnected();
@@ -91,13 +84,11 @@ public class NetWorkUtil {
 
 	/**
 	 * 判断WIFI链接状态
-	 * 
 	 * @param context
 	 * @return
 	 */
 	private static boolean isWIFIConnectivity(Context context) {
 		ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		// WIFI链接的描述信息
 		NetworkInfo networkInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 		if (networkInfo != null) {
 			return networkInfo.isConnected();

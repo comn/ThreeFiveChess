@@ -36,8 +36,6 @@ import android.util.Log;
  * 初始化这个对象后，调用{@link #start()}方法就会搜索局域网
  * 内的可连接手机，同时自己也会成为别人可见的对象。<br>
  * 当搜索到可联机对象后会返回可连对象的机器名和IP地址。
- * 
- * 主要使用UDP进行通信。
  *
  */
 public class ConnnectingService {

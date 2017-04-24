@@ -75,16 +75,13 @@ public class SingleGameActivity extends Activity implements OnClickListener {
 					showWinDialog("白方胜！");
 					computer.win();
 				}
-				// 更新分数，并没有更新手次。
 				updateScore(me, computer);
 				break;
 			case GameConstants.ACTIVE_CHANGE:
-				// 更新手次
 				updateActive(mGame);
 				break;
 			case GameConstants.ADD_CHESS:
 				updateActive(mGame);
-				// 此时玩家已下子，促使电脑下子
 				if (mGame.getActive() == computer.getType()) {
 					mComputerHandler.sendEmptyMessage(0);
 				}
@@ -189,17 +186,13 @@ public class SingleGameActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// 电脑胜，则重置后，电脑执先下。并且要按规则下。
-
-				if (mGame.getActive() == computer.getType()) {// 最后一次到电脑手次，意味着我赢
+				if (mGame.getActive() == computer.getType()) {
 					// 重置游戏
 					mGame.reset();
-					// 白子先落子
 				} else {
 					mGame.reset(computer.getType());
 					mComputerHandler.sendEmptyMessage(0);
 				}
-				// 更新地图
 				mGameView.drawGame();
 			}
 		});
@@ -226,7 +219,6 @@ public class SingleGameActivity extends Activity implements OnClickListener {
 			if (mGame.getActive() != me.getType()) {
 				isRollback = true;
 			} else {
-				// 我手时，棋盘只剩一个白子
 				if (mGame.getActions().size() == 1) {
 					break;
 				}
@@ -256,26 +248,6 @@ public class SingleGameActivity extends Activity implements OnClickListener {
 	}
 
 	class ComputerHandler extends Handler {
-		/**
-		 * Message 由一个消息队列进行管理，而消息队列却由一个Looper进行管理。Android系统中Looper负责管理线程的消息队列和消息循环，具体实现请参考
-		 * Looper的源码。可以通过 Loop.myLooper()得到当前线程的 Looper 对象，通过 Loop.getMainLooper()可 以获得当前进程的主线程的Looper 对象。
-		 * Android系统的消息队列和消息循环都是针对具体线程的，一个线程可以存在
-		 * （当然也可以不存在）一个消息队列和一个消息循环（Looper），特定线程的消息只能分发给本线程，不能进行跨线程， 跨进程通讯。
-		 * 但是创建的工作线程默认是没有消息循环和消息队列的，如果 想让该线程具有消息队列和消息循环，
-		 * 需要在线程中首先调用Looper.prepare()来创建消息队列，然后调用Looper.loop() 进入消息循环。
-		 *           
-		 *   Looper.prepare();// 循环消息队列  
-             myhandler = new Handler() {  
-  
-                public void handleMessage(Message msg) {  
-                    // TODO Auto-generated method stub  
-                    super.handleMessage(msg);  
-                    System.out.println(msg.arg1);  
-                }  
-            };  
-            Looper.loop();// 直到消息队列循环结果  
-		 * @param looper
-		 */
 		public ComputerHandler(Looper looper) {
 			super(looper);
 		}
@@ -287,16 +259,14 @@ public class SingleGameActivity extends Activity implements OnClickListener {
 			Coordinate c = null;
 			// 判断是否为第一子。
 			if (mGame.isFirstChess()) {
-				c = new Coordinate(7, 7);// 天元位置。
+				c = new Coordinate(7, 7);
 			} else {
 				c = ai.getPosition(mGame.getChessMap());
 			}
 //			SystemClock.sleep(1000);
-			// 游戏逻辑中添加电脑方的棋子
 			mGame.addChess(c, computer);
-			// 更新地图
 			mGameView.drawGame();
-			// 控制电脑手时的玩家悔棋。
+			
 			if (isRollback) {
 				rollback();
 				isRollback = false;

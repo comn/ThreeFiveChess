@@ -38,9 +38,6 @@ import android.util.Log;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  * 
- * 在Sorcket通信中本机服务端和客户端的区别与联系：
- * 区别：作为服务端可以同一时间接入多台客户端设备并进行通信，客户端同一时间只能接入一台服务端设备
- * 联系：都可以发送和接收数据，进行数据传输
  */
 public class BluetoothChatService {
     // Debugging
@@ -127,7 +124,7 @@ public class BluetoothChatService {
         }
     }
 
-    /**主动联机
+    /**
      * Start the ConnectThread to initiate a connection to a remote device.
      * @param device  The BluetoothDevice to connect
      * @param secure Socket Security type - Secure (true) , Insecure (false)
@@ -159,8 +156,6 @@ public class BluetoothChatService {
         if (D) Log.d(TAG, "connected, Socket Type:" + socketType);
 
         // Cancel the thread that completed the connection
-//        正常情况下mConnectThread用完之后自身置为null,这里面mConnectThread不为null的情况是在AcceptThread线程中先执行
-//        后又同步执行mConnectThread
         if (mConnectThread != null) {mConnectThread.cancel(); mConnectThread = null;}
 
         // Cancel any thread currently running a connection
@@ -247,7 +242,7 @@ public class BluetoothChatService {
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
-        // Start the service over to restart listening mode开启监听状态，等待被联机
+        // Start the service over to restart listening mode
         BluetoothChatService.this.start();
     }
 
@@ -270,7 +265,6 @@ public class BluetoothChatService {
      * This thread runs while listening for incoming connections. It behaves
      * like a server-side client. It runs until a connection is accepted
      * (or until cancelled).
-     * 作为服务端接收联机的线程
      */
     private class AcceptThread extends Thread {
         // The local server socket
@@ -282,7 +276,7 @@ public class BluetoothChatService {
             BluetoothServerSocket tmp = null;
             mSocketType = secure ? "Secure":"Insecure";
 
-            // Create a new listening server socket  作为服务端
+            // Create a new listening server socket  
             try {
                 if (secure) {
                     tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE,
@@ -305,7 +299,7 @@ public class BluetoothChatService {
             BluetoothSocket socket = null;
 
             // Listen to the server socket if we're not connected
-            while (mState != STATE_CONNECTED) {//当前未连接状态，开启服务端等待客户端搜索接收
+            while (mState != STATE_CONNECTED) {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
@@ -328,7 +322,7 @@ public class BluetoothChatService {
                                     mSocketType,true);
                             break;
                         case STATE_NONE:
-                        case STATE_CONNECTED://联机之后
+                        case STATE_CONNECTED:
                             // Either not ready or already connected. Terminate new socket.
                             try {
                                 socket.close();
@@ -359,7 +353,6 @@ public class BluetoothChatService {
      * This thread runs while attempting to make an outgoing connection
      * with a device. It runs straight through; the connection either
      * succeeds or fails.
-     * 作为客户端请求联机的线程
      */
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
@@ -373,7 +366,7 @@ public class BluetoothChatService {
             mSocketType = secure ? "Secure" : "Insecure";
 
             // Get a BluetoothSocket for a connection with the
-            // given BluetoothDevice     作为客户端
+            // given BluetoothDevice     
             try {
                 if (secure) {
                     tmp = device.createRfcommSocketToServiceRecord(
@@ -433,7 +426,6 @@ public class BluetoothChatService {
     /**
      * This thread runs during a connection with a remote device.
      * It handles all incoming and outgoing transmissions.
-     * 操作联机后数据传输的线程
      */
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;

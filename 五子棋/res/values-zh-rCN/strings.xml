@@ -6,7 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="scan">扫描</string>
     <string name="new_game">人机对战</string>
-    <string name="fight">两人对战</string>
+    <string name="fight">成三棋</string>
     <string name="fight_connection">联网PK</string>
     <string name="Role_black">黑方</string>
     <string name="Role_white">白方</string>
@@ -29,4 +29,12 @@
     <string name="setting">设置</string>
     <string name="ok">确定</string>
     <string name="Continue">继续</string>
+    
+    <string name="title_paired_devices">历史匹配设备</string>
+    <string name="title_other_devices">当前可匹配设备</string>
+    <string name="button_scan">扫描</string>
+    <string name="state_connected">已联机</string>
+    <string name="state_connecting">正在联机..</string>
+    <string name="state_listen">正在监听</string>
+    <string name="state_none">未联机</string>
 </resources>

@@ -89,7 +89,7 @@ public class NetGameActivity extends Activity implements OnClickListener{
             case GameConstants.ADD_CHESS:
                 int x = msg.arg1;
                 int y = msg.arg2;
-                mService.addChess(x, y); //将自己下的点位传给对方。
+                mService.addChess(x, y); 
                 updateActive(mGame);
                 break;
             default:

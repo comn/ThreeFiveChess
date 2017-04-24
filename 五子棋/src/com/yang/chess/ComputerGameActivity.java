@@ -57,7 +57,7 @@ public class ComputerGameActivity extends BaseActivity {
 				}
 				break;
 				
-			case GameConstants.CHANGE_ACTIVE:// 换手
+			case GameConstants.CHANGE_ACTIVE:
 				updateActive(mGame);
 				computerHandler();
 				break;
@@ -78,7 +78,6 @@ public class ComputerGameActivity extends BaseActivity {
 				//动子阶段来了
 				if (mGame.getActions().size()>=GameConstants.TOTAL_CHESS){
 //				1、设置白子不可被玩家移动
-//					通知电脑进行动子阶段的处理
 					mComputerHandler.sendEmptyMessage(GameConstants.COMPUTER_CHESS_MOVE);
 					return;
 				}
@@ -115,21 +114,16 @@ public class ComputerGameActivity extends BaseActivity {
 			switch (msg.what) {
 			case GameConstants.COMPUTER_DOWN_CHESS:
 				ai.updateValue(mGame);
-				// 判断是否为第一子。
 				if (mGame.isFirstChess()) {
-					c = new Coordinate(7, 3);// 3,7;7,11;11,7
-//					此处为成三棋中电脑第一子的落点
+					c = new Coordinate(7, 3);
 				} else {
-//					ComputerAI算法存在问题
 					c = ai.getPosition(mGame.getChessMap());
 				}
 				mGame.addChess(c, white);
 				mGameView.drawGame();
 				break;
 			case GameConstants.COMPUTER_EAT_CHESS:
-//				这里面通过电脑思考后拿到点位
 				 c=ai.eatChess(mGame.getChessMap());
-//				c= new Coordinate(3, 7,Game.BLACK);
 				boolean isComputerEat = mGame.eatChess(c);
 				if (isComputerEat) {
 					mGameView.drawGame();
@@ -149,9 +143,8 @@ public class ComputerGameActivity extends BaseActivity {
 						+"("+end.x+","+end.y+")");
 		
 				mGameView.chessMove(start, end,false);
-				//白子移动后判定黑子是否有可移动的空间
 				if(!ai.isBlackHasWay()){
-					mGame.sendGameResult(To3Game.WHITE);//白方胜
+					mGame.sendGameResult(To3Game.WHITE);
 				}
 				break;
 			default:
@@ -168,7 +161,6 @@ public class ComputerGameActivity extends BaseActivity {
 	
 	@Override
 	protected void onDestroy() {
-		// 停止持续处理消息。
 		mComputerHandler.getLooper().quit();
 		super.onDestroy();
 	}

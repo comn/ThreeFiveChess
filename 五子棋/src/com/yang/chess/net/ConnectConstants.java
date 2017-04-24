@@ -15,8 +15,8 @@ public class ConnectConstants {
     public static final int CONNECT_REJECT = 13;
     public static final int CHAT_ONE = 14;
 
-    static final int BROADCAST_JOIN = 0; //广播所有玩家加入到玩家集合列表。
-    static final int BROADCAST_EXIT = 1;//广播所有玩家退出玩家集合。
+    static final int BROADCAST_JOIN = 0; 
+    static final int BROADCAST_EXIT = 1;
     
     static final int UDP_JOIN = 0;
     

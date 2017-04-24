@@ -7,11 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 
 /**
- *   三子棋规则：
- *   第一阶段：落子阶段黑白各9颗依次落子，成三可吃子,且不可再落子
- *   第二阶段：动子阶段黑白依次动子，成三可吃子，三不可吃，非三可吃
- *   第三阶段：子数最新为0的一方判负，投降方判负
-	
  * @author Flsolate
  * @date 2016-9-15
  * @description  处理游戏逻辑
@@ -94,21 +89,9 @@ public class To3Game {
         Coordinate c = mActions.pollLast();
       
 		if (c != null){
-			  //判断是否为成三状态，是：还原已吃的子
 	        if (isThree(c.x, c.y, c.type)) {
 	        		
-//	        		Coordinate first = mActions.getFirst();
-//	        		int firstCount = getChessCount(first.type);
-//	        		int secondCount;
-//	        		if (first.type==BLACK) {
-//	        			secondCount = getChessCount(WHITE);
-//					}else {
-//						secondCount = getChessCount(BLACK);
-//					}
-	        		//未吃子，判断子数，先手时子数比后手多一或后手子数相等
-//	        		if (((mActive ==first.type) && (firstCount> secondCount)) || ((mActive !=first.type) && (firstCount == secondCount))){
-					if (c.type ==mActive) { //当前最后添加的一子颜色和当前手相同（未成三时不同,吃子之后不同），则为成三未吃子悔棋
-	        			//则要多毁掉一子
+					if (c.type ==mActive) { 
 	        			Coordinate r = mActions.pollLast();
 	        			mGameMap[r.x][r.y] = 0;
 	        			if (mActive==me.type) {
@@ -117,11 +100,9 @@ public class To3Game {
 							challenger.rollbackChess();
 						}
 	        			sendGameRollBack("rollback eatChess");
-					}else {//已吃子
+					}else {
 						Coordinate last = eatedActions.pollLast();
-//			        	if (last !=null) { 
 						mGameMap[last.x][last.y] = last.type;
-//					 }
 				}
 			}
 			mGameMap[c.x][c.y] = 0;
@@ -137,7 +118,6 @@ public class To3Game {
      * 移动阶段悔棋
      */
     public void moveRollBack(){
-    	//成三手之后悔了当前子，不可再悔下一步
 		if (isTo3Back) {
 			isTo3Back =false;
 			return;
@@ -146,11 +126,9 @@ public class To3Game {
     	if (clearlast !=null) {
 			//清除当前位置棋子
     		Coordinate c = mActions.pollLast();
-    		if (isThree(c.x, c.y, c.type)) {//判断当前位置是否成三
-				if (c.type ==mActive) {//未吃子，只悔成三手，并悔吃子状态
-					//1、悔棋之后不可因之前成三吃子
+    		if (isThree(c.x, c.y, c.type)) {
+				if (c.type ==mActive) {
 					sendGameRollBack("rollback eatChess");
-//					2、此处只让悔成三的一手，且不变手
 					changeActive();
 					isTo3Back =true;
 				}else {
@@ -177,7 +155,6 @@ public class To3Game {
     	if (o==null) {
 			throw new RuntimeException("o is null");
 		}
-//    	mActions.remove(o);这里要让对象以坐标点作为比较的标准
     	if (mGameMap[o.x][o.y] !=0) {
     		mGameMap[o.x][o.y] = 0;
     		return true;
@@ -219,7 +196,6 @@ public class To3Game {
     public boolean eatChess(Coordinate o) {
     	if (clearChess(o) && !isGameEnd(o.x, o.y, o.type)) {
 			setAddChess(true);
-    		//添加进已吃的子的集合
     		eatedActions.add(o);
     		return true;
 		}
@@ -411,7 +387,7 @@ public class To3Game {
         mActions.clear();
         eatedActions.clear();
         clearedActions.clear();
-        isAddChess =true; //设置可添加棋子
+        isAddChess =true; 
     }
     /**
      * 自定义先手
@@ -422,7 +398,7 @@ public class To3Game {
         mActions.clear();
         eatedActions.clear();
         clearedActions.clear();
-        isAddChess =true; //设置可添加棋子
+        isAddChess =true; 
     }
     
     /**
@@ -433,7 +409,7 @@ public class To3Game {
         mActions.clear();
         eatedActions.clear();
         clearedActions.clear();
-        isAddChess =true; //设置可添加棋子
+        isAddChess =true; 
     }
     
     private void changeActive(){
@@ -658,9 +634,7 @@ public class To3Game {
     
     public int isTwo(Coordinate c,int type) {
     	    int  two=0;
-//		对每个点分析，每个点有四种情况出现两子  如果该点同时又有两个两子（两条），则权值提升
-    	//1、外层四条三 
-//		横向
+    	    
     		int bank=0;
 			int horizontal = 0;
 			int x =c.x;
@@ -884,7 +858,6 @@ public class To3Game {
     */
     public boolean isNearBy(Coordinate s, Coordinate e) {
     	//外层八个点
-//    	1.start在角上，end在中心 问题：当start(13,1) 和 end(7,13)相邻
     	if (s.x==1 && s.y==1) {
 			if (e.x==1&&e.y==7 || e.x==7&&e.y==1 ) {
 				return true;

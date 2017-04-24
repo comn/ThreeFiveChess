@@ -53,14 +53,6 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 		initViews();
 	}
 	public void initGame(Handler mRefreshHandler,int mode,boolean isServer) {
-		//本机为服务器，我得黑子，对方得白子
-	/*	if (isServer) {??这里面是我和对方执白子还是黑子的UI问题，这样做可能在To3Game中出现问题，故弃用
-			me=black;
-			challenger=white;
-		}else {
-			me=white;
-			challenger=black;
-		}*/
 		if (isServer) {
 			black = new Player(Game.BLACK, GameConstants.TO3_CHESS_COUNT);
 			white = new Player(Game.WHITE, GameConstants.TO3_CHESS_COUNT);
@@ -157,13 +149,16 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 	protected void setStatus(Handler mRefreshHandler,String string) {
 		progress_bar.setVisibility(View.VISIBLE);
 		tv_loading.setText(string);
-		mRefreshHandler.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				progress_bar.setVisibility(View.GONE);
-			}
-		}, 6000);
+		//联机成功则使进度条消失
+		if(getResources().getString(R.string.state_connected).equals(string)){
+			mRefreshHandler.postDelayed(new Runnable() {
+	
+				@Override
+				public void run() {
+					progress_bar.setVisibility(View.GONE);
+				}
+			}, 3000);
+		}
 	}
 	
 	public abstract void restart() ;
